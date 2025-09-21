@@ -1,12 +1,30 @@
 import { useEffect, useState } from "react";
-import { Menu, LogIn } from "lucide-react";
+import {
+  Menu,
+  LogIn,
+  CircleUser,
+  ChevronDown,
+  Home,
+  Settings,
+  LogOut,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router";
+import { useGetMeQuery } from "@/redux/features/auth/auth.api";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const user = false;
+  const { data } = useGetMeQuery(undefined);
+  const user = data?.data;
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
@@ -38,14 +56,46 @@ export default function Navbar() {
           </div>
 
           {user ? (
-            <div className="flex items-center gap-2">
-              <img
-                src="https://i.pravatar.cc/40"
-                alt="profile"
-                className="w-9 h-9 rounded-full border"
-              />
-              <span className="hidden md:inline">Kawser Ferdous</span>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div className="flex items-center gap-1 cursor-pointer">
+                  <CircleUser size={28} />
+                  <ChevronDown size={18} />
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className="w-56 mt-5 p-3 rounded-none"
+                align="end"
+                forceMount
+              >
+                <DropdownMenuLabel className="font-normal bg-gray-300 mb-1">
+                  <div className="flex items-center gap-1">
+                    <CircleUser size={16} />
+                    <p className="text-sm font-medium leading-none">
+                      {user?.name}
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuItem asChild>
+                  <Link to="/safety-settings">
+                    <Home /> Dashboard
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/safety-settings">
+                    {" "}
+                    <Settings /> Settings
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={handleLogout}
+                  className="text-red-600 font-semibold"
+                >
+                  <LogOut className="text-red-600" /> Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : (
             <Link to={"/login"}>
               <Button
