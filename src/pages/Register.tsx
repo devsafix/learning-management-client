@@ -25,22 +25,33 @@ import {
   Lock,
   Loader2,
   ArrowRight,
-  Shield,
   Eye,
   EyeOff,
+  User,
+  MapPin,
+  Phone,
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
 // Zod schema for form validation
 const formSchema = z.object({
+  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
   email: z.string().email({ message: "Invalid email address." }),
-  password: z.string().min(1, { message: "Password is required." }),
+  phone: z.string().regex(/^(\+8801[3-9]\d{8}|01[3-9]\d{8})$/, {
+    message: "Enter a valid Bangladeshi phone number (e.g. +88017XXXXXXXX).",
+  }),
+  address: z
+    .string()
+    .min(5, { message: "Address must be at least 5 characters." }),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters." }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function Login() {
+export default function Register() {
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -49,6 +60,9 @@ export default function Login() {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: "",
+      phone: "",
+      address: "",
       email: "",
       password: "",
     },
@@ -57,7 +71,7 @@ export default function Login() {
   const onSubmit: SubmitHandler<FormValues> = async (values) => {
     console.log(values);
     try {
-      toast.success("Login successful!");
+      toast.success("Register successful!");
     } catch (error: any) {
       toast.error(
         error?.data?.message || "Login failed. Please check your credentials."
@@ -78,10 +92,10 @@ export default function Login() {
             <Card className="border-none bg-transparent text-white">
               <CardHeader className="space-y-2 text-center pb-8">
                 <CardTitle className="text-3xl font-bold">
-                  Log in to your account
+                  Create a new account
                 </CardTitle>
                 <CardDescription className="text-white/80">
-                  Enter your credentials to access your account
+                  Fill in your details to register
                 </CardDescription>
               </CardHeader>
 
@@ -92,6 +106,77 @@ export default function Login() {
                     noValidate
                     className="space-y-6 text-white/80"
                   >
+                    {/* Name Field */}
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">
+                            Full Name
+                          </FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" />
+                              <Input
+                                placeholder="Enter your full name"
+                                className="pl-10"
+                                {...field}
+                              />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    {/* Phone Field */}
+                    <FormField
+                      control={form.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">
+                            Phone Number
+                          </FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" />
+                              <Input
+                                placeholder="+88017XXXXXXXX"
+                                className="pl-10"
+                                {...field}
+                              />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* Address Field */}
+                    <FormField
+                      control={form.control}
+                      name="address"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">
+                            Address
+                          </FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" />
+                              <Input
+                                placeholder="Enter your full address"
+                                className="pl-10"
+                                {...field}
+                              />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
                     {/* Email Field */}
                     <FormField
                       control={form.control}
@@ -162,11 +247,11 @@ export default function Login() {
                       {isLoading ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Signing In...
+                          Creating Account...
                         </>
                       ) : (
                         <>
-                          Sign In
+                          Create Account
                           <ArrowRight className="ml-2 h-4 w-4" />
                         </>
                       )}
@@ -174,28 +259,20 @@ export default function Login() {
                   </form>
                 </Form>
 
-                {/* Register Link */}
+                {/* Login Link */}
                 <div className="mt-6 text-center">
                   <p className="text-sm text-white/80">
-                    Don't have an account?{" "}
+                    Already have an account?{" "}
                     <Link
-                      to="/register"
-                      className="font-medium underline transition-colors text-white"
+                      to="/login"
+                      className="font-medium text-white underline transition-colors"
                     >
-                      Register here
+                      Sign in here
                     </Link>
                   </p>
                 </div>
               </CardContent>
             </Card>
-
-            {/* Security Note */}
-            <div className="mt-6 text-center">
-              <p className="text-xs flex items-center justify-center gap-2">
-                <Shield className="h-3 w-3" />
-                Your information is secure and encrypted
-              </p>
-            </div>
           </div>
         </div>
       </div>
