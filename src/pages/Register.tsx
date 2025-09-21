@@ -33,6 +33,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useRegisterUserMutation } from "@/redux/features/auth/auth.api";
 
 // Zod schema for form validation
 const formSchema = z.object({
@@ -53,9 +54,9 @@ type FormValues = z.infer<typeof formSchema>;
 
 export default function Register() {
   const navigate = useNavigate();
+  const [registerUser, { isLoading }] = useRegisterUserMutation();
 
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -69,9 +70,10 @@ export default function Register() {
   });
 
   const onSubmit: SubmitHandler<FormValues> = async (values) => {
-    console.log(values);
     try {
-      toast.success("Register successful!");
+      const res = await registerUser(values).unwrap();
+      toast.success(res.message || "Registration successful!");
+      navigate("/login");
     } catch (error: any) {
       toast.error(
         error?.data?.message || "Login failed. Please check your credentials."
@@ -117,7 +119,7 @@ export default function Register() {
                           </FormLabel>
                           <FormControl>
                             <div className="relative">
-                              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" />
+                              <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                               <Input
                                 placeholder="Enter your full name"
                                 className="pl-10"
@@ -140,7 +142,7 @@ export default function Register() {
                           </FormLabel>
                           <FormControl>
                             <div className="relative">
-                              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" />
+                              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                               <Input
                                 placeholder="+88017XXXXXXXX"
                                 className="pl-10"
@@ -164,7 +166,7 @@ export default function Register() {
                           </FormLabel>
                           <FormControl>
                             <div className="relative">
-                              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" />
+                              <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                               <Input
                                 placeholder="Enter your full address"
                                 className="pl-10"
@@ -188,7 +190,7 @@ export default function Register() {
                           </FormLabel>
                           <FormControl>
                             <div className="relative">
-                              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" />
+                              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                               <Input
                                 type="email"
                                 placeholder="Enter your email"
@@ -213,7 +215,7 @@ export default function Register() {
                           </FormLabel>
                           <FormControl>
                             <div className="relative">
-                              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" />
+                              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                               <Input
                                 type={showPassword ? "text" : "password"}
                                 placeholder="Enter your password"
