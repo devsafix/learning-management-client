@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import {
   Menu,
@@ -11,7 +12,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router";
-import { useGetMeQuery } from "@/redux/features/auth/auth.api";
+import {
+  useGetMeQuery,
+  useLogoutUserMutation,
+} from "@/redux/features/auth/auth.api";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,11 +24,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { toast } from "sonner";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const { data } = useGetMeQuery(undefined);
   const user = data?.data;
+
+  const [logoutUser] = useLogoutUserMutation();
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser({}).unwrap();
+      toast.success("Logged out successfully!");
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Logout failed. Please try again.");
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
@@ -44,7 +60,7 @@ export default function Navbar() {
         <div className="text-xl font-bold">Code Learner</div>
 
         {/* Right side */}
-        <div className="flex items-center gap-4 md:gap-8">
+        <div className="flex items-center gap-2 md:gap-8">
           {/* Links */}
           <div className="hidden md:flex items-center gap-6 roboto">
             <a href="#courses" className="hover:text-primary">
