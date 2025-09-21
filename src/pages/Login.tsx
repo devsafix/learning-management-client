@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useLoginUserMutation } from "@/redux/features/auth/auth.api";
 
 // Zod schema for form validation
 const formSchema = z.object({
@@ -42,9 +43,9 @@ type FormValues = z.infer<typeof formSchema>;
 
 export default function Login() {
   const navigate = useNavigate();
+  const [loginUser, { isLoading }] = useLoginUserMutation();
 
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -55,9 +56,10 @@ export default function Login() {
   });
 
   const onSubmit: SubmitHandler<FormValues> = async (values) => {
-    console.log(values);
     try {
-      toast.success("Login successful!");
+      const res = await loginUser(values).unwrap();
+      toast.success(res.message || "Login successful!");
+      navigate("/");
     } catch (error: any) {
       toast.error(
         error?.data?.message || "Login failed. Please check your credentials."
