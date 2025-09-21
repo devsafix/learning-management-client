@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Menu, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Link } from "react-router";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -46,12 +47,14 @@ export default function Navbar() {
               <span className="hidden md:inline">Kawser Ferdous</span>
             </div>
           ) : (
-            <Button
-              variant="default"
-              className="flex items-center gap-1 font-medium"
-            >
-              <LogIn size={16} /> Login Now
-            </Button>
+            <Link to={"/login"}>
+              <Button
+                variant="default"
+                className="flex items-center gap-1 font-medium cursor-pointer"
+              >
+                <LogIn size={16} /> Login Now
+              </Button>
+            </Link>
           )}
 
           <Button

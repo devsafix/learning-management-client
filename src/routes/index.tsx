@@ -1,6 +1,7 @@
 import App from "@/App";
 // import DashboardLayout from "@/components/layout/DashboardLayout";
 import Home from "@/pages/Home";
+import Login from "@/pages/Login";
 import { createBrowserRouter } from "react-router";
 
 export const router = createBrowserRouter([
@@ -15,10 +16,6 @@ export const router = createBrowserRouter([
       // {
       //   path: "register",
       //   Component: Register,
-      // },
-      // {
-      //   path: "login",
-      //   Component: Login,
       // },
       // {
       //   path: "about",
@@ -36,7 +33,7 @@ export const router = createBrowserRouter([
       //   path: "contact",
       //   Component: Contact,
       // },
-      
+
       // {
       //   path: "unauthorized",
       //   Component: Unauthorized,
@@ -67,5 +64,8 @@ export const router = createBrowserRouter([
   //     ...generateRoutes(driverSidebarItems),
   //   ],
   // },
-  
+  {
+    path: "login",
+    Component: Login,
+  },
 ]);
