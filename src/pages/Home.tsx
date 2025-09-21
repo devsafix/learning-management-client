@@ -1,3 +1,10 @@
+import Banner from "@/components/module/home/Banner";
+
 export default function Home() {
-  return <div>Home</div>;
+  return (
+    <div>
+      <Banner />
+      <Banner />
+    </div>
+  );
 }
