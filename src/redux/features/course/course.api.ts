@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { baseApi } from "../../baseApi";
 
 const courseApi = baseApi.injectEndpoints({
@@ -17,7 +18,18 @@ const courseApi = baseApi.injectEndpoints({
       }),
       providesTags: ["COURSE"],
     }),
+    enrollCourse: build.mutation<any, { courseId: string }>({
+      query: ({ courseId }) => ({
+        url: `/orders/enroll/${courseId}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["COURSE"],
+    }),
   }),
 });
 
-export const { useGetAllCourseQuery, useGetCourseBySlugQuery } = courseApi;
+export const {
+  useGetAllCourseQuery,
+  useGetCourseBySlugQuery,
+  useEnrollCourseMutation,
+} = courseApi;

@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useParams } from "react-router";
-import { useGetCourseBySlugQuery } from "@/redux/features/course/course.api";
+import {
+  useEnrollCourseMutation,
+  useGetCourseBySlugQuery,
+} from "@/redux/features/course/course.api";
 import { useGetLessonByIdQuery } from "@/redux/features/lesson/lesson.api";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -23,12 +26,28 @@ import {
   TrendingUp,
   CheckCircle,
 } from "lucide-react";
+import { toast } from "sonner";
 
 export default function CourseDetails() {
   const { slug } = useParams();
   const { data, isLoading, error } = useGetCourseBySlugQuery(slug as string);
+  const [enrollCourse, { isLoading: enrolling }] = useEnrollCourseMutation();
 
   const course = data?.data;
+
+  const handleEnroll = async () => {
+    try {
+      const res = await enrollCourse({ courseId: course._id }).unwrap();
+
+      if (res?.data?.paymentUrl) {
+        window.location.href = res.data.paymentUrl;
+      } else {
+        toast.error("Failed to initialize payment.");
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Enrollment failed");
+    }
+  };
 
   // fetch lessons when course is available
   const { data: lessonsData, isLoading: lessonLoading } = useGetLessonByIdQuery(
@@ -194,10 +213,12 @@ export default function CourseDetails() {
               {/* CTA Button */}
               <Button
                 size="lg"
+                disabled={enrolling}
+                onClick={handleEnroll}
                 className="w-full font-semibold py-4 text-lg cursor-pointer"
               >
                 <CheckCircle className="w-5 h-5 mr-2" />
-                Enroll Now - Start Learning
+                {enrolling ? "Processing..." : "Enroll Now - Start Learning"}
               </Button>
 
               <p className="text-center text-slate-400 text-sm">
