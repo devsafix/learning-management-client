@@ -1,5 +1,6 @@
 import App from "@/App";
 import Course from "@/pages/Course";
+import CourseDetails from "@/pages/CourseDetails";
 // import DashboardLayout from "@/components/layout/DashboardLayout";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
@@ -19,6 +20,11 @@ export const router = createBrowserRouter([
         path: "all-courses",
         Component: Course,
       },
+      {
+        path: "course-details/:slug",
+        Component: CourseDetails,
+      },
+
       // {
       //   path: "contact",
       //   Component: Contact,
