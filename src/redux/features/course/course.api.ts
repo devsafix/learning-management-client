@@ -9,7 +9,15 @@ const courseApi = baseApi.injectEndpoints({
       }),
       providesTags: ["COURSE"],
     }),
+
+    getCourseBySlug: build.query({
+      query: (slug: string) => ({
+        url: `/course/${slug}`,
+        method: "GET",
+      }),
+      providesTags: ["COURSE"],
+    }),
   }),
 });
 
-export const { useGetAllCourseQuery } = courseApi;
+export const { useGetAllCourseQuery, useGetCourseBySlugQuery } = courseApi;
