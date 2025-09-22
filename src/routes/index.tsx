@@ -4,6 +4,7 @@ import CourseDetails from "@/pages/CourseDetails";
 // import DashboardLayout from "@/components/layout/DashboardLayout";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
+import PaymentSuccess from "@/pages/payment/PaymentSuccess";
 import Register from "@/pages/Register";
 import { createBrowserRouter } from "react-router";
 
@@ -23,6 +24,10 @@ export const router = createBrowserRouter([
       {
         path: "course-details/:slug",
         Component: CourseDetails,
+      },
+      {
+        path: "payment/success",
+        Component: PaymentSuccess,
       },
 
       // {
