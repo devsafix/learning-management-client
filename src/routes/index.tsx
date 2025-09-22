@@ -1,4 +1,5 @@
 import App from "@/App";
+import Course from "@/pages/Course";
 // import DashboardLayout from "@/components/layout/DashboardLayout";
 import Home from "@/pages/Home";
 import Login from "@/pages/Login";
@@ -14,18 +15,10 @@ export const router = createBrowserRouter([
         index: true,
         Component: Home,
       },
-      // {
-      //   path: "about",
-      //   Component: About,
-      // },
-      // {
-      //   path: "features",
-      //   Component: Features,
-      // },
-      // {
-      //   path: "faq",
-      //   Component: Faq,
-      // },
+      {
+        path: "all-courses",
+        Component: Course,
+      },
       // {
       //   path: "contact",
       //   Component: Contact,

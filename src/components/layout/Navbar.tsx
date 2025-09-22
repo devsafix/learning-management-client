@@ -67,12 +67,12 @@ export default function Navbar() {
         <div className="flex items-center gap-2 md:gap-8">
           {/* Links */}
           <div className="hidden md:flex items-center gap-6 roboto">
-            <a href="#courses" className="hover:text-primary">
+            <Link to="/all-courses" className="hover:text-primary">
               All Courses
-            </a>
-            <a href="#path" className="hover:text-primary">
+            </Link>
+            <Link to="/learning-path" className="hover:text-primary">
               Learning Path
-            </a>
+            </Link>
           </div>
 
           {user ? (
