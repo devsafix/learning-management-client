@@ -97,7 +97,7 @@ export default function CourseDetails() {
       : 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br">
+    <div className="min-h-screen bg-foreground">
       {/* Hero Section with Background Pattern */}
       <div className="relative overflow-hidden">
         <section className="relative max-w-7xl mx-auto px-4 py-20 md:py-32">

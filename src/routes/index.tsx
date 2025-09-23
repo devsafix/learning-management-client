@@ -41,14 +41,14 @@ export const router = createBrowserRouter([
       // },
     ],
   },
-  // {
-  //   Component: withAuth(DashboardLayout, role.admin as TRole),
-  //   path: "/admin",
-  //   children: [
-  //     { index: true, element: <Navigate to="/admin/profile" /> },
-  //     ...generateRoutes(adminSidebarItems),
-  //   ],
-  // },
+  {
+    Component: withAuth(DashboardLayout, role.admin as TRole),
+    path: "/admin",
+    children: [
+      { index: true, element: <Navigate to="/admin/profile" /> },
+      ...generateRoutes(adminSidebarItems),
+    ],
+  },
   // {
   //   Component: withAuth(DashboardLayout, role.rider as TRole),
   //   path: "/rider",

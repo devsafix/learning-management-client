@@ -22,7 +22,7 @@ export default function Course() {
     <section className="background-image py-32 md:pt-36">
       {/* Header */}
       <div className="mx-auto max-w-3xl px-4 text-center space-y-3 mb-12">
-        <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold">
+        <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white">
           Courses That Take You From{" "}
           <span className="text-primary">Learning</span> to{" "}
           <span className="text-green-400">Doing</span>
@@ -51,7 +51,7 @@ export default function Course() {
 
       {/* All courses */}
       <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-xl md:text-2xl font-semibold mb-6">All Courses</h2>
+        <h2 className="text-xl md:text-2xl font-semibold mb-6 text-white">All Courses</h2>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {courses.map((course: any) => (

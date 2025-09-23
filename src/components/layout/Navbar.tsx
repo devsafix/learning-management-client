@@ -61,10 +61,12 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-5 md:py-7">
         {/* Logo */}
-        <div className="text-xl font-bold">Code Learner</div>
+        <Link to={"/"} className="text-xl font-bold text-white">
+          Code Learner
+        </Link>
 
         {/* Right side */}
-        <div className="flex items-center gap-2 md:gap-8">
+        <div className="flex items-center gap-2 md:gap-8 text-white">
           {/* Links */}
           <div className="hidden md:flex items-center gap-6 roboto">
             <Link to="/all-courses" className="hover:text-primary">
