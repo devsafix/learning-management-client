@@ -11,6 +11,9 @@ import Register from "@/pages/Register";
 import type { TRole } from "@/types";
 import { withAuth } from "@/utils/withAuth";
 import { createBrowserRouter, Navigate } from "react-router";
+import { adminSidebarItems } from "./adminSidebarItems";
+import { generateRoutes } from "@/utils/generateRoutes";
+import { studentSidebarItems } from "./studentSidebarItems";
 
 export const router = createBrowserRouter([
   {
@@ -35,11 +38,6 @@ export const router = createBrowserRouter([
       },
 
       // {
-      //   path: "contact",
-      //   Component: Contact,
-      // },
-
-      // {
       //   path: "unauthorized",
       //   Component: Unauthorized,
       // },
@@ -49,26 +47,18 @@ export const router = createBrowserRouter([
     Component: withAuth(DashboardLayout, role.admin as TRole),
     path: "/admin",
     children: [
-      { index: true, element: <Navigate to="/admin/profile" /> },
+      { index: true, element: <Navigate to="/admin/analysis" /> },
       ...generateRoutes(adminSidebarItems),
     ],
   },
-  // {
-  //   Component: withAuth(DashboardLayout, role.rider as TRole),
-  //   path: "/rider",
-  //   children: [
-  //     { index: true, element: <Navigate to="/rider/profile" /> },
-  //     ...generateRoutes(riderSidebarItems),
-  //   ],
-  // },
-  // {
-  //   Component: withAuth(DashboardLayout, role.driver as TRole),
-  //   path: "/driver",
-  //   children: [
-  //     { index: true, element: <Navigate to="/driver/profile" /> },
-  //     ...generateRoutes(driverSidebarItems),
-  //   ],
-  // },
+  {
+    Component: withAuth(DashboardLayout, role.user as TRole),
+    path: "/rider",
+    children: [
+      { index: true, element: <Navigate to="/user/my-courses" /> },
+      ...generateRoutes(studentSidebarItems),
+    ],
+  },
   {
     path: "login",
     Component: Login,
