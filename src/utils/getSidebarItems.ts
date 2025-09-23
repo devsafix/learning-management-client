@@ -1,6 +1,6 @@
 import { role } from "@/constants/role";
 import { adminSidebarItems } from "@/routes/adminSidebarItems";
-import { studentSidebarItems } from "@/routes/studentSidebarItems";
+import { userSidebarItems } from "@/routes/userSidebarItems";
 import type { TRole } from "@/types";
 
 export const getSidebarItems = (userRole: TRole) => {
@@ -8,7 +8,7 @@ export const getSidebarItems = (userRole: TRole) => {
     case role.admin:
       return [...adminSidebarItems];
     case role.user:
-      return [...studentSidebarItems];
+      return [...userSidebarItems];
     default:
       return [];
   }

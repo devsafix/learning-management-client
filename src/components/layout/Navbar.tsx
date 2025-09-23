@@ -33,6 +33,7 @@ export default function Navbar() {
 
   const { data } = useGetMeQuery(undefined);
   const user = data?.data;
+  const role = data?.data?.role;
 
   const [logoutUser] = useLogoutUserMutation();
 
@@ -91,9 +92,15 @@ export default function Navbar() {
                 forceMount
               >
                 <DropdownMenuItem asChild>
-                  <Link to="/admin/analysis">
-                    <Home /> Dashboard
-                  </Link>
+                  {role === "user" ? (
+                    <Link to="/user/my-courses">
+                      <Home /> Dashboard
+                    </Link>
+                  ) : (
+                    <Link to="/admin/analysis">
+                      <Home /> Dashboard
+                    </Link>
+                  )}
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/safety-settings">

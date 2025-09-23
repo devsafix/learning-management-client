@@ -13,7 +13,7 @@ import { withAuth } from "@/utils/withAuth";
 import { createBrowserRouter, Navigate } from "react-router";
 import { adminSidebarItems } from "./adminSidebarItems";
 import { generateRoutes } from "@/utils/generateRoutes";
-import { studentSidebarItems } from "./studentSidebarItems";
+import { userSidebarItems } from "./userSidebarItems";
 
 export const router = createBrowserRouter([
   {
@@ -56,7 +56,7 @@ export const router = createBrowserRouter([
     path: "/user",
     children: [
       { index: true, element: <Navigate to="/user/my-courses" /> },
-      ...generateRoutes(studentSidebarItems),
+      ...generateRoutes(userSidebarItems),
     ],
   },
   {

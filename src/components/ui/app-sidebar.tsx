@@ -11,7 +11,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import { useGetMeQuery } from "@/redux/features/auth/auth.api";
 import { User, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -20,6 +20,9 @@ import { getSidebarItems } from "@/utils/getSidebarItems";
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: userData } = useGetMeQuery(undefined);
   const userRole = userData?.data?.role;
+
+  const location = useLocation();
+  const currentPath = location.pathname;
 
   const data = {
     navMain: getSidebarItems(userRole),
@@ -53,7 +56,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       >
                         <Link
                           to={menuItem.url}
-                          className="flex items-center justify-between p-4 w-full font-medium text-foreground/70 hover:text-foreground transition-all duration-200"
+                          className={`flex items-center justify-between p-4 w-full font-medium transition-all duration-200 ${
+                            currentPath === menuItem.url
+                              ? "text-blue-400"
+                              : "text-foreground/70 hover:text-foreground"
+                          }`}
                         >
                           <div className="flex items-center gap-4 flex-1 min-w-0">
                             <span className="truncate text-sm">
