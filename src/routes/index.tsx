@@ -14,6 +14,7 @@ import { createBrowserRouter, Navigate } from "react-router";
 import { adminSidebarItems } from "./adminSidebarItems";
 import { generateRoutes } from "@/utils/generateRoutes";
 import { userSidebarItems } from "./userSidebarItems";
+import Unauthorized from "@/pages/Unauthorized";
 
 export const router = createBrowserRouter([
   {
@@ -36,11 +37,10 @@ export const router = createBrowserRouter([
         path: "payment/success",
         Component: PaymentSuccess,
       },
-
-      // {
-      //   path: "unauthorized",
-      //   Component: Unauthorized,
-      // },
+      {
+        path: "unauthorized",
+        Component: Unauthorized,
+      },
     ],
   },
   {
