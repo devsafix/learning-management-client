@@ -1,4 +1,6 @@
 import App from "@/App";
+import DashboardLayout from "@/components/layout/DashboardLayout";
+import { role } from "@/constants/role";
 import Course from "@/pages/Course";
 import CourseDetails from "@/pages/CourseDetails";
 // import DashboardLayout from "@/components/layout/DashboardLayout";
@@ -6,7 +8,9 @@ import Home from "@/pages/Home";
 import Login from "@/pages/Login";
 import PaymentSuccess from "@/pages/payment/PaymentSuccess";
 import Register from "@/pages/Register";
-import { createBrowserRouter } from "react-router";
+import type { TRole } from "@/types";
+import { withAuth } from "@/utils/withAuth";
+import { createBrowserRouter, Navigate } from "react-router";
 
 export const router = createBrowserRouter([
   {

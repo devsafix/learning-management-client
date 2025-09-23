@@ -16,7 +16,7 @@ export interface ISidebarItem {
   }[];
 }
 
-export type TRole = "admin" | "driver" | "rider";
+export type TRole = "admin" | "user";
 
 export interface IRideBook {
   pickupLocation: { latitude: number; longitude: number };
