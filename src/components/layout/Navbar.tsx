@@ -91,7 +91,7 @@ export default function Navbar() {
                 forceMount
               >
                 <DropdownMenuItem asChild>
-                  <Link to="/safety-settings">
+                  <Link to="/admin/analysis">
                     <Home /> Dashboard
                   </Link>
                 </DropdownMenuItem>

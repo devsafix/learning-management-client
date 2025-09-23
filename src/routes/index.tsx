@@ -53,7 +53,7 @@ export const router = createBrowserRouter([
   },
   {
     Component: withAuth(DashboardLayout, role.user as TRole),
-    path: "/rider",
+    path: "/user",
     children: [
       { index: true, element: <Navigate to="/user/my-courses" /> },
       ...generateRoutes(studentSidebarItems),

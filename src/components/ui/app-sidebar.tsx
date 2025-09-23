@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Link } from "react-router";
 import { useGetMeQuery } from "@/redux/features/auth/auth.api";
-import { User, ChevronRight, ArrowLeft } from "lucide-react";
+import { User, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { getSidebarItems } from "@/utils/getSidebarItems";
 
@@ -32,15 +32,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <Link to="/" className="flex items-center justify-center">
           <div className="relative p-3 rounded-2xl">Code Learner</div>
         </Link>
-        <Link
-          to="/"
-          className="text-center mt-3 border  flex items-center gap-2 justify-center"
-        >
-          <ArrowLeft className="h-5 w-5" />
-          <h2 className="text-sm font-semibold text-foreground tracking-wide">
-            BACK HOME
-          </h2>
-        </Link>
       </SidebarHeader>
 
       {/* Stylish Navigation Content */}
@@ -58,7 +49,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <SidebarMenuItem key={menuItem.title}>
                       <SidebarMenuButton
                         asChild
-                        className="group relative overflow-hidden rounded-xl transition-all duration-300 hover:bg-muted hover:shadow-sm data-[state=open]:bg-muted/80 data-[state=open]:shadow-sm"
+                        className="group relative overflow-hidden rounded-xl transition-all duration-300 bg-muted hover:shadow-sm data-[state=open]:bg-muted/80 data-[state=open]:shadow-sm"
                       >
                         <Link
                           to={menuItem.url}

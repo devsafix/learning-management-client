@@ -7,8 +7,8 @@ export const studentSidebarItems: ISidebarItem[] = [
     title: "Dashboard",
     items: [
       {
-        title: "Update Profile",
-        url: "/admin/profile",
+        title: "My Courses",
+        url: "/user/my-course",
         component: Home,
       },
     ],
