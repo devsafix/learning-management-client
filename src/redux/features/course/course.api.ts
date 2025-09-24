@@ -10,6 +10,7 @@ const courseApi = baseApi.injectEndpoints({
       }),
       providesTags: ["COURSE"],
     }),
+
     createCourse: build.mutation<any, any>({
       query: (body) => ({
         url: "/course",
@@ -26,6 +27,16 @@ const courseApi = baseApi.injectEndpoints({
       }),
       providesTags: ["COURSE"],
     }),
+
+    updateCourse: build.mutation<any, { id: string; body: any }>({
+      query: ({ id, body }) => ({
+        url: `/course/${id}`,
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: ["COURSE"],
+    }),
+
     enrollCourse: build.mutation<any, { courseId: string }>({
       query: ({ courseId }) => ({
         url: `/orders/enroll/${courseId}`,
