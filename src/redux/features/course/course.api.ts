@@ -37,6 +37,14 @@ const courseApi = baseApi.injectEndpoints({
       invalidatesTags: ["COURSE"],
     }),
 
+    deleteCourse: build.mutation<any, string>({
+      query: (id) => ({
+        url: `/course/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["COURSE"],
+    }),
+
     enrollCourse: build.mutation<any, { courseId: string }>({
       query: ({ courseId }) => ({
         url: `/orders/enroll/${courseId}`,
@@ -50,5 +58,8 @@ const courseApi = baseApi.injectEndpoints({
 export const {
   useGetAllCourseQuery,
   useGetCourseBySlugQuery,
+  useCreateCourseMutation,
+  useUpdateCourseMutation,
+  useDeleteCourseMutation,
   useEnrollCourseMutation,
 } = courseApi;
