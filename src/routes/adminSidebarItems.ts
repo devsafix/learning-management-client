@@ -26,7 +26,7 @@ export const adminSidebarItems: ISidebarItem[] = [
       },
       {
         title: "All Courses",
-        url: "/admin/al-courses",
+        url: "/admin/all-courses",
         component: AllCourse,
       },
       {
