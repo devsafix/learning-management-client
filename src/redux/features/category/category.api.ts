@@ -5,33 +5,36 @@ const categoryApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getCategories: build.query({
       query: () => ({
-        url: "/categories",
+        url: "/category",
         method: "GET",
       }),
       providesTags: ["CATEGORY"],
     }),
 
     addCategory: build.mutation({
-      query: (body) => ({
-        url: "/categories",
+      query: (data) => ({
+        url: "/category",
         method: "POST",
-        body,
+        body: data,
       }),
       invalidatesTags: ["CATEGORY"],
     }),
 
     updateCategory: build.mutation({
-      query: ({ id, ...body }) => ({
-        url: `/categories/${id}`,
+      query: ({ id, ...data }) => ({
+        url: `/category/${id}`,
         method: "PATCH",
-        body,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       }),
       invalidatesTags: ["CATEGORY"],
     }),
 
     deleteCategory: build.mutation({
       query: (id) => ({
-        url: `/categories/${id}`,
+        url: `/category/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["CATEGORY"],
