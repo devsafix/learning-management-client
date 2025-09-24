@@ -10,6 +10,14 @@ const courseApi = baseApi.injectEndpoints({
       }),
       providesTags: ["COURSE"],
     }),
+    createCourse: build.mutation<any, any>({
+      query: (body) => ({
+        url: "/course",
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["COURSE"],
+    }),
 
     getCourseBySlug: build.query({
       query: (slug: string) => ({
