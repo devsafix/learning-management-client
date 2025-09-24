@@ -29,7 +29,13 @@ const categoryApi = baseApi.injectEndpoints({
       invalidatesTags: ["CATEGORY"],
     }),
 
-    
+    deleteCategory: build.mutation({
+      query: (id) => ({
+        url: `/categories/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["CATEGORY"],
+    }),
   }),
 });
 
