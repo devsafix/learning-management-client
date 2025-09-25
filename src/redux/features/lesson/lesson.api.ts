@@ -36,6 +36,14 @@ const lessonApi = baseApi.injectEndpoints({
       providesTags: ["LESSON"],
     }),
 
+    getAllLessons: build.query<{ data: Lesson[] }, void>({
+      query: () => ({
+        url: "/lessons",
+        method: "GET",
+      }),
+      providesTags: ["LESSON"],
+    }),
+
     
   }),
 });
