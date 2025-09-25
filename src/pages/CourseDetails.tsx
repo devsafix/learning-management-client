@@ -4,7 +4,6 @@ import {
   useEnrollCourseMutation,
   useGetCourseBySlugQuery,
 } from "@/redux/features/course/course.api";
-import { useGetLessonByIdQuery } from "@/redux/features/lesson/lesson.api";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -27,6 +26,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useGetLessonsByCourseQuery } from "@/redux/features/lesson/lesson.api";
 
 export default function CourseDetails() {
   const { slug } = useParams();
@@ -50,7 +50,7 @@ export default function CourseDetails() {
   };
 
   // fetch lessons when course is available
-  const { data: lessonsData, isLoading: lessonLoading } = useGetLessonByIdQuery(
+  const { data: lessonsData, isLoading: lessonLoading } = useGetLessonsByCourseQuery(
     course?._id,
     {
       skip: !course?._id,
