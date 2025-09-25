@@ -77,7 +77,16 @@ const lessonApi = baseApi.injectEndpoints({
       invalidatesTags: ["LESSON", "COURSE"],
     }),
 
-   
+    deleteLesson: build.mutation<any, string>({
+      query: (id) => {
+        console.log("Deleting lesson with ID:", id);
+        return {
+          url: `/lessons/${id}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: ["LESSON", "COURSE"],
+    }),
   }),
 });
 
