@@ -44,6 +44,21 @@ const lessonApi = baseApi.injectEndpoints({
       providesTags: ["LESSON"],
     }),
 
+    createLesson: build.mutation<any, LessonCreatePayload>({
+      query: (lessonData) => {
+        console.log("Creating lesson with data:", lessonData);
+        return {
+          url: "/lessons",
+          method: "POST",
+          data: lessonData,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+      },
+      invalidatesTags: ["LESSON", "COURSE"],
+    }),
+
     
   }),
 });
