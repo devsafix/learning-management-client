@@ -59,7 +59,25 @@ const lessonApi = baseApi.injectEndpoints({
       invalidatesTags: ["LESSON", "COURSE"],
     }),
 
-    
+    updateLesson: build.mutation<
+      any,
+      { id: string; body: Partial<LessonCreatePayload> }
+    >({
+      query: ({ id, body }) => {
+        console.log("Updating lesson with data:", { id, body });
+        return {
+          url: `/lessons/${id}`,
+          method: "PUT",
+          data: body,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+      },
+      invalidatesTags: ["LESSON", "COURSE"],
+    }),
+
+   
   }),
 });
 
