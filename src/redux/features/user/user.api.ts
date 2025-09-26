@@ -40,7 +40,21 @@ const userApi = baseApi.injectEndpoints({
       providesTags: ["USER"],
     }),
 
-    
+    updateUser: build.mutation<any, { id: string; body: UserUpdatePayload }>({
+      query: ({ id, body }) => {
+        console.log("Updating user with data:", { id, body });
+        return {
+          url: `/users/${id}`,
+          method: "PATCH",
+          data: body,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+      },
+      invalidatesTags: ["USER"],
+    }),
+
   }),
 });
 
