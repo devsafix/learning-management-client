@@ -66,7 +66,16 @@ const userApi = baseApi.injectEndpoints({
       invalidatesTags: ["USER"],
     }),
 
-    
+    unblockUser: build.mutation<any, string>({
+      query: (id) => {
+        console.log("Unblocking user with ID:", id);
+        return {
+          url: `/users/unblock/${id}`,
+          method: "PATCH",
+        };
+      },
+      invalidatesTags: ["USER"],
+    }),
   }),
 });
 
