@@ -55,6 +55,18 @@ const userApi = baseApi.injectEndpoints({
       invalidatesTags: ["USER"],
     }),
 
+    blockUser: build.mutation<any, string>({
+      query: (id) => {
+        console.log("Blocking user with ID:", id);
+        return {
+          url: `/users/block/${id}`,
+          method: "PATCH",
+        };
+      },
+      invalidatesTags: ["USER"],
+    }),
+
+    
   }),
 });
 
