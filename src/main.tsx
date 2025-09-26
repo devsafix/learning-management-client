@@ -11,7 +11,7 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ReduxProvider store={store}>
       <RouterProvider router={router} />
-      <Toaster />
+      <Toaster richColors />
     </ReduxProvider>
   </StrictMode>
 );

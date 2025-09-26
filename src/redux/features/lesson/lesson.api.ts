@@ -67,7 +67,7 @@ const lessonApi = baseApi.injectEndpoints({
         console.log("Updating lesson with data:", { id, body });
         return {
           url: `/lessons/${id}`,
-          method: "PUT",
+          method: "PATCH",
           data: body,
           headers: {
             "Content-Type": "application/json",
