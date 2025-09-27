@@ -1,13 +1,9 @@
-import {
-  useGetEarningsQuery,
-  useGetTopCoursesQuery,
-} from "@/redux/features/admin/admin.api";
+import { useGetEarningsQuery } from "@/redux/features/admin/admin.api";
 import { useGetAllUsersQuery } from "@/redux/features/user/user.api";
 import { useGetAllCourseQuery } from "@/redux/features/course/course.api";
 import { useGetCategoriesQuery } from "@/redux/features/category/category.api";
 
 import {
-  LineChart,
   Line,
   BarChart,
   Bar,
@@ -31,12 +27,17 @@ import {
   UserCheck,
   UserX,
   Award,
-  Calendar,
   ArrowUpIcon,
-  Eye,
+  BarChart3,
+  PieChart as PieChartIcon,
+  Activity,
+  Star,
+  Target,
+  Zap,
+  TrendingDown,
+  Clock,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface User {
   _id: string;
@@ -71,19 +72,30 @@ interface Category {
 export default function Analytics() {
   const { data: earningsData, isLoading: earningsLoading } =
     useGetEarningsQuery();
-  const { data: topCoursesData, isLoading: topCoursesLoading } =
-    useGetTopCoursesQuery();
+
   const { data: usersData, isLoading: usersLoading } = useGetAllUsersQuery();
   const { data: coursesData, isLoading: coursesLoading } =
     useGetAllCourseQuery(undefined);
   const { data: categoriesData } = useGetCategoriesQuery({});
 
-  if (earningsLoading || topCoursesLoading || usersLoading || coursesLoading) {
+  if (earningsLoading || usersLoading || coursesLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading analytics...</p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6">
+            <div className="relative">
+              <div className="w-20 h-20 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+              <div className="absolute inset-0 w-20 h-20 border-4 border-transparent border-t-indigo-400 rounded-full animate-ping"></div>
+            </div>
+            <div className="text-center space-y-2">
+              <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
+                Loading Analytics
+              </h3>
+              <p className="text-slate-600 dark:text-slate-400">
+                Please wait while we process your data...
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -93,7 +105,6 @@ export default function Analytics() {
   const courses: Course[] = coursesData?.data || [];
   const categories: Category[] = categoriesData?.data || [];
   const earnings = earningsData?.data;
-  const topCourses = topCoursesData?.data || [];
 
   // Calculate statistics
   const totalUsers = users.length;
@@ -170,17 +181,16 @@ export default function Analytics() {
 
   // Recent activity data
   const recentUsers = users.slice(0, 5);
-
   const recentCourses = courses.slice(0, 5);
 
   // Chart colors
   const COLORS = [
-    "#8884d8",
-    "#82ca9d",
-    "#ffc658",
-    "#ff7c7c",
-    "#8dd1e1",
-    "#d084d0",
+    "#6366f1", // indigo
+    "#10b981", // emerald
+    "#f59e0b", // amber
+    "#ef4444", // red
+    "#8b5cf6", // violet
+    "#06b6d4", // cyan
   ];
 
   // Format currency
@@ -200,393 +210,617 @@ export default function Analytics() {
     });
   };
 
+  // Get growth indicator
+  const getGrowthIndicator = (rate: number, isReverse = false) => {
+    const isPositive = isReverse ? rate < 0 : rate > 0;
+    const IconComponent = isPositive ? ArrowUpIcon : TrendingDown;
+    const colorClass = isPositive ? "text-emerald-600" : "text-red-600";
+    const bgClass = isPositive
+      ? "bg-emerald-100 dark:bg-emerald-900/30"
+      : "bg-red-100 dark:bg-red-900/30";
+
+    return (
+      <div
+        className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${bgClass} ${colorClass}`}
+      >
+        <IconComponent className="w-3 h-3" />
+        {Math.abs(rate)}%
+      </div>
+    );
+  };
+
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold">Analytics Dashboard</h1>
-          <p className="text-muted-foreground mt-1">
-            Monitor your platform's performance and growth
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        {/* Header */}
+        <div className="mb-8 space-y-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="space-y-2">
+              <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-slate-900 via-indigo-900 to-slate-900 dark:from-slate-100 dark:via-indigo-400 dark:to-slate-100 bg-clip-text text-transparent">
+                Analytics Dashboard
+              </h1>
+              <p className="text-slate-600 dark:text-slate-400">
+                Monitor your platform's performance and growth metrics
+              </p>
+            </div>
+            <div className="flex items-center gap-3 px-4 py-2 bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700">
+              <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+              <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                <Clock className="h-4 w-4" />
+                <span>Updated: {new Date().toLocaleDateString()}</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Calendar className="h-4 w-4" />
-          Last updated: {new Date().toLocaleDateString()}
-        </div>
-      </div>
 
-      {/* Key Metrics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-            <DollarSign className="h-4 w-4 text-green-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {formatCurrency(totalRevenue)}
-            </div>
-            <div className="flex items-center text-xs text-muted-foreground">
-              <ArrowUpIcon className="h-3 w-3 text-green-500 mr-1" />+
-              {revenueGrowthRate}% from last month
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-            <Users className="h-4 w-4 text-blue-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{totalUsers}</div>
-            <div className="flex items-center text-xs text-muted-foreground">
-              <ArrowUpIcon className="h-3 w-3 text-green-500 mr-1" />+
-              {userGrowthRate}% from last month
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Courses</CardTitle>
-            <BookOpen className="h-4 w-4 text-purple-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{totalCourses}</div>
-            <div className="flex items-center text-xs text-muted-foreground">
-              <ArrowUpIcon className="h-3 w-3 text-green-500 mr-1" />+
-              {courseGrowthRate}% from last month
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Total Enrollments
-            </CardTitle>
-            <Award className="h-4 w-4 text-orange-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{totalEnrollments}</div>
-            <div className="flex items-center text-xs text-muted-foreground">
-              <ArrowUpIcon className="h-3 w-3 text-green-500 mr-1" />
-              +23.4% from last month
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Secondary Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Users</CardTitle>
-            <UserCheck className="h-4 w-4 text-green-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{activeUsers}</div>
-            <p className="text-xs text-muted-foreground">
-              {((activeUsers / totalUsers) * 100).toFixed(1)}% of total users
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Blocked Users</CardTitle>
-            <UserX className="h-4 w-4 text-red-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{blockedUsers}</div>
-            <p className="text-xs text-muted-foreground">
-              {((blockedUsers / totalUsers) * 100).toFixed(1)}% of total users
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Lessons</CardTitle>
-            <Play className="h-4 w-4 text-indigo-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{totalLessons}</div>
-            <p className="text-xs text-muted-foreground">
-              Avg {(totalLessons / totalCourses || 0).toFixed(1)} per course
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Categories</CardTitle>
-            <TrendingUp className="h-4 w-4 text-teal-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{totalCategories}</div>
-            <p className="text-xs text-muted-foreground">
-              {verifiedUsers} verified users
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Revenue Trend */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5" />
-              Revenue & Enrollments Trend
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={monthlyData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis yAxisId="left" />
-                <YAxis yAxisId="right" orientation="right" />
-                <Tooltip />
-                <Legend />
-                <Bar
-                  yAxisId="left"
-                  dataKey="revenue"
-                  fill="#8884d8"
-                  name="Revenue ($)"
-                />
-                <Line
-                  yAxisId="right"
-                  type="monotone"
-                  dataKey="enrollments"
-                  stroke="#82ca9d"
-                  strokeWidth={3}
-                  name="Enrollments"
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        {/* User Growth */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5" />
-              User Growth
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={monthlyData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="users" fill="#82ca9d" name="New Users" />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Pie Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Course Difficulty Levels */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Award className="h-5 w-5" />
-              Course Difficulty Levels
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={courseLevels}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, percent }) =>
-                    `${name} ${(percent * 100).toFixed(0)}%`
-                  }
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {courseLevels.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index + 3]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        {/* Courses by Category */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <BookOpen className="h-5 w-5" />
-              Courses by Category
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={coursesByCategory}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, percent }) =>
-                    `${name} ${(percent * 100).toFixed(0)}%`
-                  }
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {coursesByCategory.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Tables Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Top Performing Courses */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Award className="h-5 w-5" />
-              Top Performing Courses
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {topPerformingCourses.map((course, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between p-3 border rounded"
-                >
-                  <div className="flex-1">
-                    <h4 className="font-medium truncate">{course.title}</h4>
-                    <div className="flex items-center gap-2 mt-1">
-                      <Badge variant="outline" className="text-xs">
-                        {course.category}
-                      </Badge>
-                      <Badge
-                        variant={
-                          course.level === "beginner"
-                            ? "default"
-                            : course.level === "intermediate"
-                            ? "secondary"
-                            : "outline"
-                        }
-                        className="text-xs"
-                      >
-                        {course.level}
-                      </Badge>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="font-semibold">
-                      {course.enrollments} enrollments
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      {formatCurrency(course.revenue)}
-                    </div>
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                      ⭐ {course.rating.toFixed(1)}
-                    </div>
-                  </div>
+        {/* Primary Metrics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 rounded-full translate-x-8 -translate-y-8"></div>
+            <div className="relative">
+              <div className="flex items-center justify-between mb-4">
+                <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center">
+                  <DollarSign className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
                 </div>
-              ))}
+                {getGrowthIndicator(revenueGrowthRate)}
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                  Total Revenue
+                </p>
+                <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                  {formatCurrency(totalRevenue)}
+                </p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  from last month
+                </p>
+              </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Recent Activity */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Eye className="h-5 w-5" />
-              Recent Activity
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
+          <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-blue-500/10 to-blue-600/5 rounded-full translate-x-8 -translate-y-8"></div>
+            <div className="relative">
+              <div className="flex items-center justify-between mb-4">
+                <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
+                  <Users className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                </div>
+                {getGrowthIndicator(userGrowthRate)}
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                  Total Users
+                </p>
+                <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                  {totalUsers}
+                </p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  from last month
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-purple-500/10 to-purple-600/5 rounded-full translate-x-8 -translate-y-8"></div>
+            <div className="relative">
+              <div className="flex items-center justify-between mb-4">
+                <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center">
+                  <BookOpen className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                </div>
+                {getGrowthIndicator(courseGrowthRate)}
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                  Total Courses
+                </p>
+                <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                  {totalCourses}
+                </p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  from last month
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-orange-500/10 to-orange-600/5 rounded-full translate-x-8 -translate-y-8"></div>
+            <div className="relative">
+              <div className="flex items-center justify-between mb-4">
+                <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-xl flex items-center justify-center">
+                  <Award className="h-6 w-6 text-orange-600 dark:text-orange-400" />
+                </div>
+                {getGrowthIndicator(23.4)}
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                  Total Enrollments
+                </p>
+                <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                  {totalEnrollments}
+                </p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  from last month
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Secondary Metrics */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+            <div className="flex items-center justify-between">
               <div>
-                <h4 className="font-medium text-sm mb-2">Recent Users</h4>
-                <div className="space-y-2">
-                  {recentUsers.slice(0, 3).map((user) => (
-                    <div
-                      key={user._id}
-                      className="flex items-center justify-between text-sm"
-                    >
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center">
-                          <Users className="h-3 w-3" />
+                <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                  Active Users
+                </p>
+                <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                  {activeUsers}
+                </p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  {((activeUsers / totalUsers) * 100).toFixed(1)}% of total
+                  users
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center">
+                <UserCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                  Blocked Users
+                </p>
+                <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                  {blockedUsers}
+                </p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  {((blockedUsers / totalUsers) * 100).toFixed(1)}% of total
+                  users
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center">
+                <UserX className="w-5 h-5 text-red-600 dark:text-red-400" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                  Total Lessons
+                </p>
+                <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                  {totalLessons}
+                </p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  Avg {(totalLessons / totalCourses || 0).toFixed(1)} per course
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center">
+                <Play className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                  Categories
+                </p>
+                <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                  {totalCategories}
+                </p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  {verifiedUsers} verified users
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-teal-100 dark:bg-teal-900/30 rounded-lg flex items-center justify-center">
+                <TrendingUp className="w-5 h-5 text-teal-600 dark:text-teal-400" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Charts Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* Revenue Trend */}
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-indigo-100 to-indigo-200 dark:from-indigo-900/30 dark:to-indigo-800/30 rounded-lg flex items-center justify-center">
+                  <BarChart3 className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900 dark:text-slate-100">
+                    Revenue & Enrollments
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Monthly trend analysis
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="p-6">
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={monthlyData}>
+                  <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                  <XAxis
+                    dataKey="month"
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                  <YAxis
+                    yAxisId="left"
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                  <YAxis
+                    yAxisId="right"
+                    orientation="right"
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "rgba(255, 255, 255, 0.95)",
+                      border: "none",
+                      borderRadius: "8px",
+                      boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+                    }}
+                  />
+                  <Legend />
+                  <Bar
+                    yAxisId="left"
+                    dataKey="revenue"
+                    fill="#6366f1"
+                    name="Revenue ($)"
+                    radius={[4, 4, 0, 0]}
+                  />
+                  <Line
+                    yAxisId="right"
+                    type="monotone"
+                    dataKey="enrollments"
+                    stroke="#10b981"
+                    strokeWidth={3}
+                    name="Enrollments"
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* User Growth */}
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-emerald-100 to-emerald-200 dark:from-emerald-900/30 dark:to-emerald-800/30 rounded-lg flex items-center justify-center">
+                  <Users className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900 dark:text-slate-100">
+                    User Growth
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    New user registrations
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="p-6">
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={monthlyData}>
+                  <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+                  <XAxis
+                    dataKey="month"
+                    fontSize={12}
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                  <YAxis fontSize={12} tickLine={false} axisLine={false} />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "rgba(255, 255, 255, 0.95)",
+                      border: "none",
+                      borderRadius: "8px",
+                      boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+                    }}
+                  />
+                  <Legend />
+                  <Bar
+                    dataKey="users"
+                    fill="#10b981"
+                    name="New Users"
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+
+        {/* Pie Charts Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* Course Difficulty Levels */}
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900/30 dark:to-purple-800/30 rounded-lg flex items-center justify-center">
+                  <Target className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900 dark:text-slate-100">
+                    Course Difficulty
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Distribution by level
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="p-6">
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={courseLevels}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, percent }) =>
+                      `${name} ${(percent * 100).toFixed(0)}%`
+                    }
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {courseLevels.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index + 3]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Courses by Category */}
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30 rounded-lg flex items-center justify-center">
+                  <PieChartIcon className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900 dark:text-slate-100">
+                    Course Categories
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Distribution by category
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="p-6">
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={coursesByCategory}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, percent }) =>
+                      `${name} ${(percent * 100).toFixed(0)}%`
+                    }
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {coursesByCategory.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+
+        {/* Tables Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Top Performing Courses */}
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-yellow-100 to-yellow-200 dark:from-yellow-900/30 dark:to-yellow-800/30 rounded-lg flex items-center justify-center">
+                  <Zap className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900 dark:text-slate-100">
+                    Top Performing Courses
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Highest revenue generators
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="p-6">
+              <div className="space-y-4">
+                {topPerformingCourses.map((course, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700/70 transition-colors"
+                  >
+                    <div className="flex items-center space-x-3 flex-1">
+                      <div className="flex-shrink-0">
+                        <div className="w-10 h-10 bg-gradient-to-br from-indigo-100 to-indigo-200 dark:from-indigo-900/30 dark:to-indigo-800/30 rounded-lg flex items-center justify-center">
+                          <BookOpen className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                         </div>
-                        <span>{user.name}</span>
-                        {user.role === "admin" && (
-                          <Badge variant="outline" className="text-xs">
-                            Admin
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <h4
+                          className="font-medium text-slate-900 dark:text-slate-100 truncate"
+                          title={course.title}
+                        >
+                          {course.title}
+                        </h4>
+                        <div className="flex items-center gap-2 mt-1">
+                          <Badge
+                            variant="outline"
+                            className="text-xs px-2 py-0.5"
+                          >
+                            {course.category}
                           </Badge>
-                        )}
+                          <Badge
+                            variant={
+                              course.level === "beginner"
+                                ? "secondary"
+                                : course.level === "intermediate"
+                                ? "default"
+                                : "outline"
+                            }
+                            className="text-xs px-2 py-0.5"
+                          >
+                            {course.level}
+                          </Badge>
+                        </div>
                       </div>
-                      <span className="text-muted-foreground">
-                        {formatDate(user.createdAt)}
-                      </span>
                     </div>
-                  ))}
-                </div>
+                    <div className="text-right space-y-1">
+                      <div className="font-semibold text-slate-900 dark:text-slate-100">
+                        {course.enrollments} enrollments
+                      </div>
+                      <div className="text-sm font-medium text-emerald-600 dark:text-emerald-400">
+                        {formatCurrency(course.revenue)}
+                      </div>
+                      <div className="flex items-center justify-end gap-1 text-xs text-slate-500 dark:text-slate-400">
+                        <Star className="w-3 h-3 text-amber-400 fill-current" />
+                        {course.rating.toFixed(1)}
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
+            </div>
+          </div>
 
-              <div>
-                <h4 className="font-medium text-sm mb-2">Recent Courses</h4>
-                <div className="space-y-2">
-                  {recentCourses.slice(0, 3).map((course) => (
-                    <div
-                      key={course._id}
-                      className="flex items-center justify-between text-sm"
-                    >
-                      <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center">
-                          <BookOpen className="h-3 w-3" />
-                        </div>
-                        <span className="truncate">{course.title}</span>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-muted-foreground">
-                          {formatDate(course.createdAt)}
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          {formatCurrency(course.price)}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+          {/* Recent Activity */}
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-cyan-100 to-cyan-200 dark:from-cyan-900/30 dark:to-cyan-800/30 rounded-lg flex items-center justify-center">
+                  <Activity className="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900 dark:text-slate-100">
+                    Recent Activity
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Latest users and courses
+                  </p>
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+            <div className="p-6">
+              <div className="space-y-6">
+                <div>
+                  <h4 className="font-medium text-sm mb-3 text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                    <Users className="w-4 h-4" />
+                    Recent Users
+                  </h4>
+                  <div className="space-y-3">
+                    {recentUsers.slice(0, 3).map((user) => (
+                      <div
+                        key={user._id}
+                        className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700/70 transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-full flex items-center justify-center">
+                            <Users className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                          </div>
+                          <div>
+                            <span className="font-medium text-sm text-slate-900 dark:text-slate-100">
+                              {user.name}
+                            </span>
+                            <div className="flex items-center gap-2 mt-1">
+                              {user.role === "admin" && (
+                                <Badge
+                                  variant="outline"
+                                  className="text-xs px-1.5 py-0.5"
+                                >
+                                  Admin
+                                </Badge>
+                              )}
+                              {user.isVerified && (
+                                <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        <span className="text-xs text-slate-500 dark:text-slate-400">
+                          {formatDate(user.createdAt)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="font-medium text-sm mb-3 text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                    <BookOpen className="w-4 h-4" />
+                    Recent Courses
+                  </h4>
+                  <div className="space-y-3">
+                    {recentCourses.slice(0, 3).map((course) => (
+                      <div
+                        key={course._id}
+                        className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700/70 transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900/30 dark:to-purple-800/30 rounded-full flex items-center justify-center">
+                            <BookOpen className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                          </div>
+                          <div className="min-w-0">
+                            <span className="font-medium text-sm text-slate-900 dark:text-slate-100 truncate block">
+                              {course.title}
+                            </span>
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
+                                {formatCurrency(course.price)}
+                              </span>
+                              <span className="text-xs text-slate-500 dark:text-slate-400">
+                                {course.enrolledCount || 0} enrolled
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-xs text-slate-500 dark:text-slate-400">
+                            {formatDate(course.createdAt)}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
