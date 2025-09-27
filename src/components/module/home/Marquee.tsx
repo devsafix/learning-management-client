@@ -15,7 +15,7 @@ export default function Marquee() {
             <InfiniteSlider speedOnHover={20} speed={40} gap={112}>
               <div className="flex">
                 <img
-                  className="mx-auto h-5 w-fit bg-white"
+                  className="mx-auto h-5 w-fit invert-100"
                   src="https://html.tailus.io/blocks/customers/nvidia.svg"
                   alt="Nvidia Logo"
                   height="20"
@@ -25,7 +25,7 @@ export default function Marquee() {
 
               <div className="flex">
                 <img
-                  className="mx-auto h-4 w-fit bg-white"
+                  className="mx-auto h-4 w-fit invert-100"
                   src="https://html.tailus.io/blocks/customers/column.svg"
                   alt="Column Logo"
                   height="16"
@@ -34,7 +34,7 @@ export default function Marquee() {
               </div>
               <div className="flex">
                 <img
-                  className="mx-auto h-4 w-fit bg-white"
+                  className="mx-auto h-4 w-fit invert-100"
                   src="https://html.tailus.io/blocks/customers/github.svg"
                   alt="GitHub Logo"
                   height="16"
@@ -43,7 +43,7 @@ export default function Marquee() {
               </div>
               <div className="flex">
                 <img
-                  className="mx-auto h-5 w-fit bg-white"
+                  className="mx-auto h-5 w-fit invert-100"
                   src="https://html.tailus.io/blocks/customers/nike.svg"
                   alt="Nike Logo"
                   height="20"
@@ -52,7 +52,7 @@ export default function Marquee() {
               </div>
               <div className="flex">
                 <img
-                  className="mx-auto h-5 w-fit bg-white"
+                  className="mx-auto h-5 w-fit invert-100"
                   src="https://html.tailus.io/blocks/customers/lemonsqueezy.svg"
                   alt="Lemon Squeezy Logo"
                   height="20"
@@ -61,7 +61,7 @@ export default function Marquee() {
               </div>
               <div className="flex">
                 <img
-                  className="mx-auto h-4 w-fit bg-white"
+                  className="mx-auto h-4 w-fit invert-100"
                   src="https://html.tailus.io/blocks/customers/laravel.svg"
                   alt="Laravel Logo"
                   height="16"
@@ -70,7 +70,7 @@ export default function Marquee() {
               </div>
               <div className="flex">
                 <img
-                  className="mx-auto h-7 w-fit bg-white"
+                  className="mx-auto h-7 w-fit invert-100"
                   src="https://html.tailus.io/blocks/customers/lilly.svg"
                   alt="Lilly Logo"
                   height="28"
@@ -80,7 +80,7 @@ export default function Marquee() {
 
               <div className="flex">
                 <img
-                  className="mx-auto h-6 w-fit bg-white"
+                  className="mx-auto h-6 w-fit invert-100"
                   src="https://html.tailus.io/blocks/customers/openai.svg"
                   alt="OpenAI Logo"
                   height="24"
