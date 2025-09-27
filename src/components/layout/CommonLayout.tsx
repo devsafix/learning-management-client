@@ -5,6 +5,7 @@ import Navbar from "./Navbar";
 // Import AOS
 import "aos/dist/aos.css";
 import AOS from "aos";
+import Footer from "./Footer";
 
 // Initialize AOS on component mount
 const initializeAOS = () => {
@@ -27,7 +28,7 @@ export default function CommonLayout({ children }: IProps) {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <div className="grow-1">{children}</div>
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 }
