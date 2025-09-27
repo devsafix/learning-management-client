@@ -191,13 +191,18 @@ export default function AllUsers() {
   };
 
   return (
-    <section className="py-10 w-full px-4">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+    <section className="w-full">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold">User Management</h1>
+          <h1 className="text-3xl font-bold">User Management</h1>
           <p className="text-muted-foreground mt-1">
             Manage and monitor all users in the system
           </p>
+        </div>
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Calendar className="h-4 w-4" />
+          Last updated: {new Date().toLocaleDateString()}
         </div>
       </div>
 
