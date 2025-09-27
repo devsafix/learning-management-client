@@ -1,4 +1,5 @@
 import Banner from "@/components/module/home/Banner";
+import HomeCourse from "@/components/module/home/HomeCourse";
 import Marquee from "@/components/module/home/Marquee";
 
 export default function Home() {
@@ -6,6 +7,7 @@ export default function Home() {
     <div>
       <Banner />
       <Marquee />
+      <HomeCourse />
     </div>
   );
 }
