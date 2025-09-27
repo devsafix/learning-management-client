@@ -56,6 +56,14 @@ const adminApi = baseApi.injectEndpoints({
       providesTags: ["ADMIN"],
     }),
 
+    getTopCourses: build.query<{ data: TopCourse[] }, void>({
+      query: () => ({
+        url: "/admin/top-courses",
+        method: "GET",
+      }),
+      providesTags: ["ADMIN"],
+    }),
+
     
   }),
 });
