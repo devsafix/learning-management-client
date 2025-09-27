@@ -64,7 +64,13 @@ const adminApi = baseApi.injectEndpoints({
       providesTags: ["ADMIN"],
     }),
 
-    
+    getDashboardStats: build.query<{ data: DashboardStats }, void>({
+      query: () => ({
+        url: "/admin/dashboard-stats",
+        method: "GET",
+      }),
+      providesTags: ["ADMIN", "USER", "COURSE", "LESSON"],
+    }),
   }),
 });
 
