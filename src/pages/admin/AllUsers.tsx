@@ -207,7 +207,7 @@ export default function AllUsers() {
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 my-6">
         <div className="bg-card p-4 rounded-lg border">
           <div className="flex items-center gap-2">
             <Users className="h-5 w-5 text-blue-600" />

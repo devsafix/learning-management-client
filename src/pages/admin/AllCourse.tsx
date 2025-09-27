@@ -19,6 +19,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "sonner";
+import {
+  Plus,
+  Edit3,
+  Trash2,
+  BookOpen,
+  Users,
+  Star,
+  DollarSign,
+  Grid,
+  List,
+  GraduationCap,
+  Image as ImageIcon,
+} from "lucide-react";
 
 interface Course {
   _id: string;
@@ -76,9 +89,29 @@ export default function AllCourse() {
   const [editCourse, setEditCourse] = useState<Course | null>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
 
   if (isLoading) {
-    return <div className="py-20 text-center">Loading courses...</div>;
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6">
+            <div className="relative">
+              <div className="w-20 h-20 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+              <div className="absolute inset-0 w-20 h-20 border-4 border-transparent border-t-blue-400 rounded-full animate-ping"></div>
+            </div>
+            <div className="text-center space-y-2">
+              <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
+                Loading Courses
+              </h3>
+              <p className="text-slate-600 dark:text-slate-400">
+                Please wait while we fetch your courses...
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const courses: Course[] = data?.data || [];
@@ -202,309 +235,519 @@ export default function AllCourse() {
     setIsEditDialogOpen(true);
   };
 
-  return (
-    <section className="py-10 w-full px-4">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl md:text-3xl font-bold">All Courses</h1>
+  const getLevelBadgeColor = (level: string) => {
+    switch (level) {
+      case "beginner":
+        return "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400";
+      case "intermediate":
+        return "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400";
+      case "advanced":
+        return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
+      default:
+        return "bg-slate-100 text-slate-800 dark:bg-slate-900/30 dark:text-slate-400";
+    }
+  };
 
-        {/* Add Course Dialog */}
-        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-          <DialogTrigger asChild>
-            <Button>Add Course</Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>Add New Course</DialogTitle>
-            </DialogHeader>
-            <div className="flex flex-col gap-3 mt-4">
-              <Input
-                placeholder="Course Title"
-                value={newCourse.title}
-                onChange={(e) =>
-                  setNewCourse({ ...newCourse, title: e.target.value })
-                }
-              />
-              <textarea
-                placeholder="Course Description"
-                className="border rounded p-2 min-h-[80px] resize-vertical"
-                value={newCourse.description}
-                onChange={(e) =>
-                  setNewCourse({ ...newCourse, description: e.target.value })
-                }
-              />
-              <Input
-                placeholder="Thumbnail URL"
-                value={newCourse.thumbnail}
-                onChange={(e) =>
-                  setNewCourse({ ...newCourse, thumbnail: e.target.value })
-                }
-              />
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Price"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={newCourse.price}
-                  onChange={(e) =>
-                    setNewCourse({ ...newCourse, price: e.target.value })
-                  }
-                />
-                <Input
-                  placeholder="Discount (%)"
-                  type="number"
-                  min="0"
-                  max="100"
-                  value={newCourse.discount}
-                  onChange={(e) =>
-                    setNewCourse({ ...newCourse, discount: e.target.value })
-                  }
-                />
-              </div>
-              <select
-                className="border rounded p-2"
-                value={newCourse.level}
-                onChange={(e) =>
-                  setNewCourse({
-                    ...newCourse,
-                    level: e.target.value as
-                      | "beginner"
-                      | "intermediate"
-                      | "advanced",
-                  })
-                }
-              >
-                <option value="beginner">Beginner</option>
-                <option value="intermediate">Intermediate</option>
-                <option value="advanced">Advanced</option>
-              </select>
-              <select
-                className="border rounded p-2"
-                value={newCourse.categoryId}
-                onChange={(e) =>
-                  setNewCourse({ ...newCourse, categoryId: e.target.value })
-                }
-              >
-                <option value="">Select Category</option>
-                {categories.map((cat) => (
-                  <option key={cat._id} value={cat._id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
-              <div className="flex gap-2 pt-2">
-                <Button
-                  onClick={handleAdd}
-                  disabled={isCreating}
-                  className="flex-1"
-                >
-                  {isCreating ? "Creating..." : "Create Course"}
+  const CourseFormFields = ({ course, setCourse, isEdit = false }: any) => (
+    <div className="space-y-6">
+      {/* Title */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+          Course Title
+        </label>
+        <Input
+          placeholder="Enter course title..."
+          value={course.title}
+          onChange={(e) => setCourse({ ...course, title: e.target.value })}
+          className="h-11"
+        />
+      </div>
+
+      {/* Description */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+          Description
+        </label>
+        <textarea
+          placeholder="Describe your course..."
+          className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-3 min-h-[100px] resize-vertical bg-white dark:bg-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+          value={course.description}
+          onChange={(e) =>
+            setCourse({ ...course, description: e.target.value })
+          }
+        />
+      </div>
+
+      {/* Thumbnail */}
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
+          <ImageIcon className="w-4 h-4" />
+          Thumbnail URL
+        </label>
+        <Input
+          placeholder="https://example.com/image.jpg"
+          value={course.thumbnail}
+          onChange={(e) => setCourse({ ...course, thumbnail: e.target.value })}
+          className="h-11"
+        />
+      </div>
+
+      {/* Price and Discount */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
+            <DollarSign className="w-4 h-4" />
+            Price
+          </label>
+          <Input
+            placeholder="99.99"
+            type="number"
+            min="0"
+            step="0.01"
+            value={isEdit ? course.price : course.price}
+            onChange={(e) =>
+              setCourse({
+                ...course,
+                price: isEdit ? Number(e.target.value) : e.target.value,
+              })
+            }
+            className="h-11"
+          />
+        </div>
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+            Discount (%)
+          </label>
+          <Input
+            placeholder="10"
+            type="number"
+            min="0"
+            max="100"
+            value={isEdit ? course.discount : course.discount}
+            onChange={(e) =>
+              setCourse({
+                ...course,
+                discount: isEdit ? Number(e.target.value) : e.target.value,
+              })
+            }
+            className="h-11"
+          />
+        </div>
+      </div>
+
+      {/* Level and Category */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
+            <GraduationCap className="w-4 h-4" />
+            Level
+          </label>
+          <select
+            className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-3 h-11 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+            value={course.level}
+            onChange={(e) =>
+              setCourse({
+                ...course,
+                level: e.target.value as
+                  | "beginner"
+                  | "intermediate"
+                  | "advanced",
+              })
+            }
+          >
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+          </select>
+        </div>
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+            Category
+          </label>
+          <select
+            className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-3 h-11 bg-white dark:bg-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+            value={
+              isEdit
+                ? typeof course.categoryId === "object"
+                  ? course.categoryId._id
+                  : course.categoryId
+                : course.categoryId
+            }
+            onChange={(e) =>
+              setCourse({ ...course, categoryId: e.target.value })
+            }
+          >
+            <option value="">Select Category</option>
+            {categories.map((cat) => (
+              <option key={cat._id} value={cat._id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        {/* Header Section */}
+        <div className="mb-8 space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="space-y-2">
+              <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 dark:from-slate-100 dark:via-blue-400 dark:to-slate-100 bg-clip-text text-transparent">
+                Course Management
+              </h1>
+              <p className="text-slate-600 dark:text-slate-400">
+                Manage and organize your courses efficiently
+              </p>
+            </div>
+
+            {/* Add Course Button */}
+            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg hover:shadow-xl transition-all duration-300 h-11 px-6">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Course
                 </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => setIsAddDialogOpen(false)}
-                  className="flex-1"
-                >
-                  Cancel
-                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-2xl max-h-[85vh] overflow-y-auto">
+                <DialogHeader className="pb-4 border-b border-slate-200 dark:border-slate-700">
+                  <DialogTitle className="text-xl font-semibold text-slate-900 dark:text-slate-100">
+                    Create New Course
+                  </DialogTitle>
+                </DialogHeader>
+                <div className="py-6">
+                  <CourseFormFields
+                    course={newCourse}
+                    setCourse={setNewCourse}
+                  />
+                  <div className="flex gap-3 pt-8 border-t border-slate-200 dark:border-slate-700 mt-8">
+                    <Button
+                      onClick={handleAdd}
+                      disabled={isCreating}
+                      className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white h-11"
+                    >
+                      {isCreating ? (
+                        <div className="flex items-center">
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                          Creating...
+                        </div>
+                      ) : (
+                        "Create Course"
+                      )}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => setIsAddDialogOpen(false)}
+                      className="flex-1 h-11"
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                    Total Courses
+                  </p>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                    {courses.length}
+                  </p>
+                </div>
+                <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                  <BookOpen className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                </div>
               </div>
             </div>
+            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                    Total Students
+                  </p>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                    {courses.reduce(
+                      (sum, course) => sum + course.enrolledCount,
+                      0
+                    )}
+                  </p>
+                </div>
+                <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center">
+                  <Users className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+                </div>
+              </div>
+            </div>
+            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                    Avg Rating
+                  </p>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                    {courses.length > 0
+                      ? (
+                          courses.reduce(
+                            (sum, course) => sum + course.averageRating,
+                            0
+                          ) / courses.length
+                        ).toFixed(1)
+                      : "0.0"}
+                  </p>
+                </div>
+                <div className="w-12 h-12 bg-amber-100 dark:bg-amber-900/30 rounded-lg flex items-center justify-center">
+                  <Star className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+                </div>
+              </div>
+            </div>
+            <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-slate-600 dark:text-slate-400">
+                    Revenue
+                  </p>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                    $
+                    {courses
+                      .reduce(
+                        (sum, course) =>
+                          sum + course.price * course.enrolledCount,
+                        0
+                      )
+                      .toLocaleString()}
+                  </p>
+                </div>
+                <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                  <DollarSign className="w-6 h-6 text-green-600 dark:text-green-400" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* View Mode Toggle */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <Button
+                variant={viewMode === "list" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setViewMode("list")}
+                className="h-9"
+              >
+                <List className="w-4 h-4 mr-2" />
+                List
+              </Button>
+              <Button
+                variant={viewMode === "grid" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setViewMode("grid")}
+                className="h-9"
+              >
+                <Grid className="w-4 h-4 mr-2" />
+                Grid
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Content Section */}
+        {courses.length === 0 ? (
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-12">
+            <div className="text-center space-y-4">
+              <div className="w-20 h-20 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto">
+                <BookOpen className="w-10 h-10 text-slate-400" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
+                  No courses found
+                </h3>
+                <p className="text-slate-600 dark:text-slate-400">
+                  Get started by creating your first course
+                </p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700">
+                  <tr>
+                    <th className="text-left py-4 px-6 font-semibold text-slate-700 dark:text-slate-300">
+                      Course
+                    </th>
+                    <th className="text-left py-4 px-6 font-semibold text-slate-700 dark:text-slate-300">
+                      Category
+                    </th>
+                    <th className="text-left py-4 px-6 font-semibold text-slate-700 dark:text-slate-300">
+                      Price
+                    </th>
+                    <th className="text-left py-4 px-6 font-semibold text-slate-700 dark:text-slate-300">
+                      Level
+                    </th>
+                    <th className="text-left py-4 px-6 font-semibold text-slate-700 dark:text-slate-300">
+                      Stats
+                    </th>
+                    <th className="text-center py-4 px-6 font-semibold text-slate-700 dark:text-slate-300">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {courses.map((course, index) => (
+                    <tr
+                      key={course._id}
+                      className={`border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors ${
+                        index % 2 === 0
+                          ? "bg-white dark:bg-slate-800"
+                          : "bg-slate-25 dark:bg-slate-800/30"
+                      }`}
+                    >
+                      <td className="py-4 px-6">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <BookOpen className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                          </div>
+                          <div className="min-w-0">
+                            <p
+                              className="font-medium text-slate-900 dark:text-slate-100 truncate"
+                              title={course.title}
+                            >
+                              {course.title}
+                            </p>
+                            <p
+                              className="text-sm text-slate-500 dark:text-slate-400 truncate max-w-xs"
+                              title={course.description}
+                            >
+                              {course.description}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-4 px-6">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300">
+                          {typeof course.categoryId === "object"
+                            ? course.categoryId.name
+                            : "N/A"}
+                        </span>
+                      </td>
+                      <td className="py-4 px-6">
+                        <div className="space-y-1">
+                          <p className="font-semibold text-slate-900 dark:text-slate-100">
+                            ${course.price}
+                          </p>
+                          {course.discount > 0 && (
+                            <p className="text-xs text-emerald-600 dark:text-emerald-400">
+                              {course.discount}% off
+                            </p>
+                          )}
+                        </div>
+                      </td>
+                      <td className="py-4 px-6">
+                        <span
+                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getLevelBadgeColor(
+                            course.level
+                          )}`}
+                        >
+                          {course.level}
+                        </span>
+                      </td>
+                      <td className="py-4 px-6">
+                        <div className="space-y-1">
+                          <div className="flex items-center text-sm text-slate-600 dark:text-slate-400">
+                            <BookOpen className="w-3 h-3 mr-1" />
+                            {course.totalLessons} lessons
+                          </div>
+                          <div className="flex items-center text-sm text-slate-600 dark:text-slate-400">
+                            <Users className="w-3 h-3 mr-1" />
+                            {course.enrolledCount} enrolled
+                          </div>
+                          <div className="flex items-center text-sm text-slate-600 dark:text-slate-400">
+                            <Star className="w-3 h-3 mr-1 text-amber-400" />
+                            {course.averageRating.toFixed(1)}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-4 px-6">
+                        <div className="flex items-center justify-center space-x-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleEditClick(course)}
+                            disabled={isUpdating}
+                            className="h-8 w-8 p-0 hover:bg-blue-50 hover:border-blue-200 dark:hover:bg-blue-900/20"
+                          >
+                            <Edit3 className="w-3 h-3" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleDelete(course._id)}
+                            disabled={isDeleting}
+                            className="h-8 w-8 p-0 hover:bg-red-50 hover:border-red-200 dark:hover:bg-red-900/20 text-red-600 hover:text-red-700"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Edit Course Dialog */}
+        <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+          <DialogContent className="sm:max-w-2xl max-h-[85vh] overflow-y-auto">
+            <DialogHeader className="pb-4 border-b border-slate-200 dark:border-slate-700">
+              <DialogTitle className="text-xl font-semibold text-slate-900 dark:text-slate-100">
+                Edit Course
+              </DialogTitle>
+            </DialogHeader>
+            {editCourse && (
+              <div className="py-6">
+                <CourseFormFields
+                  course={editCourse}
+                  setCourse={setEditCourse}
+                  isEdit={true}
+                />
+                <div className="flex gap-3 pt-8 border-t border-slate-200 dark:border-slate-700 mt-8">
+                  <Button
+                    onClick={handleUpdate}
+                    disabled={isUpdating}
+                    className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white h-11"
+                  >
+                    {isUpdating ? (
+                      <div className="flex items-center">
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                        Updating...
+                      </div>
+                    ) : (
+                      "Update Course"
+                    )}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsEditDialogOpen(false)}
+                    className="flex-1 h-11"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            )}
           </DialogContent>
         </Dialog>
       </div>
-
-      {courses.length === 0 ? (
-        <div className="text-center py-10">
-          <p className="text-muted-foreground">
-            No courses found. Create your first course!
-          </p>
-        </div>
-      ) : (
-        /* Courses Table */
-        <div className="overflow-x-auto">
-          <table className="w-full border rounded-lg overflow-hidden">
-            <thead className="bg-muted">
-              <tr>
-                <th className="p-3 text-left">Title</th>
-                <th className="p-3 text-left">Category</th>
-                <th className="p-3 text-left">Price</th>
-                <th className="p-3 text-left">Level</th>
-                <th className="p-3 text-left">Lessons</th>
-                <th className="p-3 text-left">Enrolled</th>
-                <th className="p-3 text-left">Rating</th>
-                <th className="p-3 text-center">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {courses.map((course) => (
-                <tr key={course._id} className="border-t">
-                  <td className="p-3 max-w-xs truncate" title={course.title}>
-                    {course.title}
-                  </td>
-                  <td className="p-3">
-                    {typeof course.categoryId === "object"
-                      ? course.categoryId.name
-                      : "N/A"}
-                  </td>
-                  <td className="p-3">${course.price}</td>
-                  <td className="p-3 capitalize">{course.level}</td>
-                  <td className="p-3">{course.totalLessons}</td>
-                  <td className="p-3">{course.enrolledCount}</td>
-                  <td className="p-3">{course.averageRating.toFixed(1)}</td>
-                  <td className="p-3">
-                    <div className="flex gap-2 justify-center">
-                      {/* Edit Course */}
-                      <Button
-                        size="sm"
-                        onClick={() => handleEditClick(course)}
-                        disabled={isUpdating}
-                      >
-                        Edit
-                      </Button>
-
-                      {/* Delete Course */}
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => handleDelete(course._id)}
-                        disabled={isDeleting}
-                      >
-                        Delete
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {/* Edit Course Dialog */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="max-w-lg max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Edit Course</DialogTitle>
-          </DialogHeader>
-          {editCourse && (
-            <div className="flex flex-col gap-3 mt-4">
-              <Input
-                placeholder="Course Title"
-                value={editCourse.title}
-                onChange={(e) =>
-                  setEditCourse({
-                    ...editCourse,
-                    title: e.target.value,
-                  })
-                }
-              />
-              <textarea
-                placeholder="Course Description"
-                className="border rounded p-2 min-h-[80px] resize-vertical"
-                value={editCourse.description}
-                onChange={(e) =>
-                  setEditCourse({
-                    ...editCourse,
-                    description: e.target.value,
-                  })
-                }
-              />
-              <Input
-                placeholder="Thumbnail URL"
-                value={editCourse.thumbnail}
-                onChange={(e) =>
-                  setEditCourse({
-                    ...editCourse,
-                    thumbnail: e.target.value,
-                  })
-                }
-              />
-              <div className="flex gap-2">
-                <Input
-                  type="number"
-                  placeholder="Price"
-                  min="0"
-                  step="0.01"
-                  value={editCourse.price}
-                  onChange={(e) =>
-                    setEditCourse({
-                      ...editCourse,
-                      price: Number(e.target.value),
-                    })
-                  }
-                />
-                <Input
-                  type="number"
-                  placeholder="Discount (%)"
-                  min="0"
-                  max="100"
-                  value={editCourse.discount}
-                  onChange={(e) =>
-                    setEditCourse({
-                      ...editCourse,
-                      discount: Number(e.target.value),
-                    })
-                  }
-                />
-              </div>
-              <select
-                className="border rounded p-2"
-                value={editCourse.level}
-                onChange={(e) =>
-                  setEditCourse({
-                    ...editCourse,
-                    level: e.target.value as
-                      | "beginner"
-                      | "intermediate"
-                      | "advanced",
-                  })
-                }
-              >
-                <option value="beginner">Beginner</option>
-                <option value="intermediate">Intermediate</option>
-                <option value="advanced">Advanced</option>
-              </select>
-              <select
-                className="border rounded p-2"
-                value={
-                  typeof editCourse.categoryId === "object"
-                    ? editCourse.categoryId._id
-                    : editCourse.categoryId
-                }
-                onChange={(e) =>
-                  setEditCourse({
-                    ...editCourse,
-                    categoryId: e.target.value,
-                  })
-                }
-              >
-                <option value="">Select Category</option>
-                {categories.map((cat) => (
-                  <option key={cat._id} value={cat._id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
-              <div className="flex gap-2 pt-2">
-                <Button
-                  onClick={handleUpdate}
-                  disabled={isUpdating}
-                  className="flex-1"
-                >
-                  {isUpdating ? "Updating..." : "Update Course"}
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => setIsEditDialogOpen(false)}
-                  className="flex-1"
-                >
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
-    </section>
+    </div>
   );
 }

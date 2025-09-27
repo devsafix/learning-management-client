@@ -25,7 +25,6 @@ import { Badge } from "@/components/ui/badge";
 import { Play, Clock, FileText, Plus, Minus } from "lucide-react";
 import type { Course, NewLesson } from "@/types";
 
-
 export default function AllLessons() {
   const { data: lessonsData, isLoading: lessonsLoading } =
     useGetAllLessonsQuery();
@@ -254,7 +253,7 @@ export default function AllLessons() {
   };
 
   return (
-    <section className="py-10 w-full px-4">
+    <section className="w-full">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold">All Lessons</h1>
