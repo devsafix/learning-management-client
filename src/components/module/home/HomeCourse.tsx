@@ -33,9 +33,9 @@ export default function HomeCourse() {
 
   return (
     <div className="bg-[#0A091A] py-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4">
         {/* Title Section */}
-        <div className="text-center mb-12 md:mb-16">
+        <div className="text-center mb-12">
           <h2 className="text-4xl sm:text-5xl font-extrabold text-white leading-tight">
             Stop Watching. <span className="text-primary">Start Building.</span>
           </h2>
