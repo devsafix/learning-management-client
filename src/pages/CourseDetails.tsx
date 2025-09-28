@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import {
   useEnrollCourseMutation,
   useGetCourseBySlugQuery,
@@ -31,6 +31,7 @@ import {
   useGetMyCoursesQuery,
   type EnrolledCourse,
 } from "@/redux/features/user/user.api";
+import { useGetMeQuery } from "@/redux/features/auth/auth.api";
 
 export default function CourseDetails() {
   const { slug } = useParams();
@@ -40,6 +41,9 @@ export default function CourseDetails() {
   const course = data?.data;
 
   const { data: myCoursesData } = useGetMyCoursesQuery();
+
+  const { data: userData } = useGetMeQuery(undefined);
+  const user = userData?.data;
 
   const enrolledCourses: EnrolledCourse[] = myCoursesData?.data || [];
 
@@ -107,7 +111,8 @@ export default function CourseDetails() {
       : 0;
 
   return (
-    <div className="min-h-screen bg-foreground">
+    <div className="relative min-h-screen background-image">
+      <div className="absolute inset-0 bg-black/40"></div>
       {/* Hero Section with Background Pattern */}
       <div className="relative overflow-hidden">
         <section className="relative max-w-7xl mx-auto px-4 py-20 md:py-32">
@@ -145,7 +150,7 @@ export default function CourseDetails() {
 
               {/* Instructor Info */}
               <Card className="bg-slate-800/50 border-slate-700/50 backdrop-blur-sm">
-                <CardContent className="p-6">
+                <CardContent className="px-6 py-2">
                   <div className="flex items-center space-x-4">
                     <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
                       <User className="w-6 h-6 text-white" />
@@ -195,7 +200,7 @@ export default function CourseDetails() {
 
               {/* Pricing */}
               <Card className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border-blue-500/30 backdrop-blur-sm">
-                <CardContent className="p-6">
+                <CardContent className="px-6 py-2">
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="flex items-center space-x-3">
@@ -222,25 +227,39 @@ export default function CourseDetails() {
 
               {/* CTA Button */}
 
-              {haveEnrolled ? (
-                <Button
-                  size="lg"
-                  disabled
-                  className="w-full font-semibold py-4 text-lg cursor-not-allowed"
-                >
-                  <CheckCircle className="w-5 h-5 mr-2" />
-                  Already Enrolled
-                </Button>
+              {user ? (
+                haveEnrolled ? (
+                  <Button
+                    size="lg"
+                    disabled
+                    className="w-full font-semibold py-4 text-lg cursor-not-allowed"
+                  >
+                    <CheckCircle className="w-5 h-5 mr-2" />
+                    Already Enrolled
+                  </Button>
+                ) : (
+                  <Button
+                    size="lg"
+                    disabled={enrolling}
+                    onClick={handleEnroll}
+                    className="w-full font-semibold py-4 text-lg cursor-pointer"
+                  >
+                    <CheckCircle className="w-5 h-5 mr-2" />
+                    {enrolling
+                      ? "Processing..."
+                      : "Enroll Now - Start Learning"}
+                  </Button>
+                )
               ) : (
-                <Button
-                  size="lg"
-                  disabled={enrolling}
-                  onClick={handleEnroll}
-                  className="w-full font-semibold py-4 text-lg cursor-pointer"
-                >
-                  <CheckCircle className="w-5 h-5 mr-2" />
-                  {enrolling ? "Processing..." : "Enroll Now - Start Learning"}
-                </Button>
+                <Link to={"/login"}>
+                  <Button
+                    size="lg"
+                    className="w-full font-semibold py-4 mb-4 text-lg cursor-pointer"
+                  >
+                    <CheckCircle className="w-5 h-5 mr-2" />
+                    Login To Enroll
+                  </Button>
+                </Link>
               )}
 
               <p className="text-center text-slate-400 text-sm">
@@ -251,9 +270,9 @@ export default function CourseDetails() {
         </section>
       </div>
 
-      <div className="">
+      <div className="relative">
         {/* Course Curriculum Section */}
-        <section className="max-w-7xl mx-auto px-4 py-16">
+        <section className="max-w-7xl mx-auto px-4 pb-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
               Course Curriculum
