@@ -27,8 +27,8 @@ export default function Banner() {
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
               Master Skills,
-              <br />
-              <span className="text-transparent bg-gradient-to-r from-primary via-blue-400 to-purple-400 bg-clip-text">
+              <span className="text-transparent bg-gradient-to-r md:font-extrabold from-primary via-blue-400 to-purple-400 bg-clip-text">
+                {" "}
                 Build Dreams
               </span>
             </h1>

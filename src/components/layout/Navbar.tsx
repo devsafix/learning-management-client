@@ -10,9 +10,9 @@ import {
   X,
   BookOpen,
   Map,
-  Code,
   User,
   BarChart3,
+  Code,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -112,7 +112,7 @@ export default function Navbar() {
           </Link>
 
           {/* Right side */}
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-2 md:gap-8">
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center">
               <div className="flex items-center gap-3">
@@ -308,7 +308,7 @@ export default function Navbar() {
               </div>
 
               {/* Mobile Navigation Links */}
-              <div className="space-y-2 mb-6">
+              <div>
                 {navLinks.map((link) => {
                   const IconComponent = link.icon;
                   return (
@@ -331,7 +331,7 @@ export default function Navbar() {
 
               {/* Mobile User Section */}
               {user && (
-                <div className="space-y-2 pt-4 border-t border-gray-200">
+                <div className="border-gray-200">
                   <Link
                     to={
                       role === "user" ? "/user/my-courses" : "/admin/analysis"
