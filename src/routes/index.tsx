@@ -69,7 +69,7 @@ export const router = createBrowserRouter([
     Component: Register,
   },
   {
-    path: "my-videos",
+    path: "my-videos/:courseId",
     Component: MyVideos,
   },
 ]);

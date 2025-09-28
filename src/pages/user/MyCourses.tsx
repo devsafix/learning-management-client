@@ -256,7 +256,7 @@ export default function MyCourses() {
                 <div className="p-6 pt-0">
                   <Button
                     onClick={() => handleViewVideos(enrollment.course._id)}
-                    className="w-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white shadow-lg hover:shadow-xl transition-all duration-300 group"
+                    className="w-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer"
                     size="lg"
                   >
                     <Play className="h-4 w-4 mr-2" />
