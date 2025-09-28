@@ -23,7 +23,7 @@ import {
   Settings,
   Key,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 interface ProfileFormData {
@@ -45,8 +45,7 @@ export default function MyProfile() {
 
   const user: User | undefined = userData?.data;
 
-  // Initialize form data when user data loads
-  useState(() => {
+  useEffect(() => {
     if (user) {
       setFormData({
         name: user.name || "",

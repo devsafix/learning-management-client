@@ -577,13 +577,13 @@ export default function Analytics() {
                     cy="50%"
                     labelLine={false}
                     label={({ name, percent }) =>
-                      `${name} ${(percent * 100).toFixed(0)}%`
+                      `${name} ${((percent as number) * 100).toFixed(0)}%`
                     }
                     outerRadius={80}
                     fill="#8884d8"
                     dataKey="value"
                   >
-                    {courseLevels.map((entry, index) => (
+                    {courseLevels.map((_, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index + 3]} />
                     ))}
                   </Pie>
@@ -619,13 +619,13 @@ export default function Analytics() {
                     cy="50%"
                     labelLine={false}
                     label={({ name, percent }) =>
-                      `${name} ${(percent * 100).toFixed(0)}%`
+                      `${name} ${((percent as number) * 100).toFixed(0)}%`
                     }
                     outerRadius={80}
                     fill="#8884d8"
                     dataKey="value"
                   >
-                    {coursesByCategory.map((entry, index) => (
+                    {coursesByCategory.map((_, index) => (
                       <Cell
                         key={`cell-${index}`}
                         fill={COLORS[index % COLORS.length]}

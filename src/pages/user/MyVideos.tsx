@@ -147,8 +147,9 @@ export default function MyVideos() {
               <div>
                 <h1 className="text-lg font-semibold text-gray-900">
                   {currentLesson?.courseId &&
-                  typeof currentLesson.courseId === "object"
-                    ? currentLesson.courseId.title
+                  typeof currentLesson.courseId === "object" &&
+                  "title" in currentLesson.courseId
+                    ? (currentLesson.courseId as { title: string }).title
                     : "Course Videos"}
                 </h1>
                 <p className="text-sm text-muted-foreground">
@@ -310,7 +311,7 @@ export default function MyVideos() {
               </div>
 
               <div className="max-h-96 overflow-y-auto">
-                {lessons.map((lesson, index) => (
+                {lessons.map((lesson) => (
                   <button
                     key={lesson._id}
                     onClick={() => setSelectedLesson(lesson)}
