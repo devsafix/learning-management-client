@@ -38,7 +38,7 @@ export default function HomeCourse() {
   }
 
   return (
-    <div className="bg-gradient-to-br from-[#0A091A] via-[#0f0e1f] to-[#0A091A] py-20">
+    <div className="py-16 bg-[#0A091A]">
       <div className="max-w-7xl mx-auto px-4">
         {/* Title Section */}
         <div className="text-center mb-16">
@@ -59,40 +59,24 @@ export default function HomeCourse() {
           {courses.map((course: any) => (
             <div
               key={course._id}
-              className="group relative bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f0f23] border border-gray-700/30 rounded-2xl shadow-2xl hover:shadow-primary/20 transition-all duration-300 hover:scale-105 hover:-translate-y-2 overflow-hidden"
+              className="group relative bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f0f23] border border-gray-700/30 rounded-2xl shadow-2xl hover:shadow-primary/20 transition-all duration-300 overflow-hidden"
             >
               {/* Gradient overlay on hover */}
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-yellow-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
 
-              {/* Top accent line */}
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
-
-              <div className="p-6 relative z-10">
+              <div className="relative z-10">
                 {/* Image container with overlay effects */}
-                <div className="relative overflow-hidden rounded-xl mb-6 group">
+                <div className="relative overflow-hidden mb-6 group">
                   <img
                     src={course.thumbnail}
                     alt={course.title}
                     className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-                  {/* Play icon overlay */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="bg-white/20 backdrop-blur-sm rounded-full p-4">
-                      <svg
-                        className="w-8 h-8 text-white"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                    </div>
-                  </div>
                 </div>
 
                 {/* Content */}
-                <div className="space-y-4">
+                <div className="space-y-4 p-4">
                   <h3 className="text-xl font-bold text-white group-hover:text-primary transition-colors duration-300 leading-tight">
                     {course.title}
                   </h3>
@@ -121,7 +105,7 @@ export default function HomeCourse() {
                 </div>
 
                 {/* CTA Button */}
-                <div className="mt-6 pt-4 border-t border-gray-700/30">
+                <div className="p-6 pt-4 border-t border-gray-700/30">
                   <Link to={`/course-details/${course.slug}`} className="block">
                     <Button
                       variant="secondary"
