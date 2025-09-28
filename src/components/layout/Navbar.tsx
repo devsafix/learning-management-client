@@ -3,11 +3,16 @@ import { useEffect, useState } from "react";
 import {
   Menu,
   LogIn,
-  CircleUser,
   ChevronDown,
   Home,
   Settings,
   LogOut,
+  X,
+  BookOpen,
+  Map,
+  Code,
+  User,
+  BarChart3,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -29,6 +34,7 @@ import { useDispatch } from "react-redux";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dispatch = useDispatch();
 
   const { data } = useGetMeQuery(undefined);
@@ -53,91 +59,317 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  return (
-    <nav
-      className={cn(
-        "fixed top-0 left-0 w-full z-50 transition-colors",
-        scrolled ? "bg-black/70 backdrop-blur-xl" : "bg-transparent"
-      )}
-    >
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-5 md:py-7">
-        {/* Logo */}
-        <Link to={"/"} className="text-xl font-bold text-white">
-          Code Learner
-        </Link>
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => {
+      if (mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    };
 
-        {/* Right side */}
-        <div className="flex items-center gap-2 md:gap-8 text-white">
-          {/* Links */}
-          <div className="hidden md:flex items-center gap-6 roboto">
-            <Link to="/all-courses" className="hover:text-primary">
-              All Courses
-            </Link>
-            <Link to="/learning-path" className="hover:text-primary">
-              Learning Path
-            </Link>
+    if (mobileMenuOpen) {
+      document.addEventListener("click", handleClickOutside);
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+      document.body.style.overflow = "unset";
+    };
+  }, [mobileMenuOpen]);
+
+  const navLinks = [
+    { href: "/all-courses", label: "All Courses", icon: BookOpen },
+    { href: "/learning-path", label: "Learning Path", icon: Map },
+  ];
+
+  return (
+    <>
+      <nav
+        className={cn(
+          "fixed top-0 left-0 w-full z-50 transition-all duration-300",
+          scrolled
+            ? "bg-white/5 backdrop-blur-2xl shadow-lg shadow-black/5"
+            : "bg-transparent"
+        )}
+      >
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-5">
+          {/* Logo */}
+          <Link to={"/"} className="flex items-center gap-3 group">
+            <div className="relative">
+              <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-primary/25 transition-all duration-300 group-hover:scale-105">
+                <Code className="w-5 h-5 text-white" />
+              </div>
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-primary/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm -z-10"></div>
+            </div>
+            <div className="hidden sm:block">
+              <h1 className="text-xl lg:text-2xl font-bold text-white transition-colors duration-300">
+                Code Learner
+              </h1>
+            </div>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center gap-8">
+            <div className="flex items-center gap-6">
+              {navLinks.map((link) => {
+                const IconComponent = link.icon;
+                return (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    className="flex items-center gap-2 text-white/90 hover:text-white font-medium transition-all duration-300 group relative px-3 py-2 rounded-lg hover:bg-white/10"
+                  >
+                    <IconComponent className="w-4 h-4" />
+                    {link.label}
+                  </Link>
+                );
+              })}
+            </div>
           </div>
 
-          {user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <div className="flex items-center gap-1 cursor-pointer">
-                  <CircleUser size={28} />
-                  <ChevronDown size={18} />
+          {/* Right side */}
+          <div className="flex items-center gap-3">
+            {user ? (
+              <div className="flex items-center gap-3">
+                {/* User Welcome Text - Desktop only */}
+                <div className="hidden md:block text-right">
+                  <p className="text-white/90 text-sm">Welcome back,</p>
+                  <p className="text-white font-medium text-sm truncate max-w-24">
+                    {user.name}
+                  </p>
                 </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="w-56 mt-5 p-3 rounded-none"
-                align="end"
-                forceMount
-              >
-                <DropdownMenuItem asChild>
-                  {role === "user" ? (
-                    <Link to="/user/my-courses">
-                      <Home /> Dashboard
-                    </Link>
-                  ) : (
-                    <Link to="/admin/analysis">
-                      <Home /> Dashboard
-                    </Link>
-                  )}
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/safety-settings">
-                    {" "}
-                    <Settings /> Settings
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={handleLogout}
-                  className="text-red-600 font-semibold"
-                >
-                  <LogOut className="text-red-600" /> Log out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <Link to={"/login"}>
-              <Button
-                variant="default"
-                className="flex items-center gap-1 font-medium cursor-pointer"
-              >
-                <LogIn size={16} /> Login Now
-              </Button>
-            </Link>
-          )}
 
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden"
-            aria-label="menu"
-          >
-            <Menu size={20} />
-          </Button>
+                {/* User Dropdown */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 transition-all duration-300 group cursor-pointer">
+                      <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/80 rounded-lg flex items-center justify-center">
+                        <span className="text-white font-semibold text-sm">
+                          {user.name.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                      <ChevronDown className="w-4 h-4 text-white/80 group-hover:text-white transition-colors duration-200" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    className="w-64 mt-3 p-2 bg-white/95 backdrop-blur-xl border border-white/20 shadow-xl rounded-xl"
+                    align="end"
+                    forceMount
+                  >
+                    {/* User Info Header */}
+                    <div className="px-3 py-3 border-b border-gray-200 mb-2">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary/80 rounded-lg flex items-center justify-center">
+                          <span className="text-white font-semibold">
+                            {user.name.charAt(0).toUpperCase()}
+                          </span>
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-900 truncate">
+                            {user.name}
+                          </p>
+                          <p className="text-sm text-gray-500 truncate">
+                            {user.email}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <DropdownMenuItem asChild className="rounded-lg mb-1">
+                      {role === "user" ? (
+                        <Link
+                          to="/user/my-courses"
+                          className="flex items-center gap-3 px-3 py-2"
+                        >
+                          <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <Home className="w-4 h-4 text-blue-600" />
+                          </div>
+                          <div>
+                            <p className="font-medium">Dashboard</p>
+                            <p className="text-xs text-gray-500">
+                              Manage your courses
+                            </p>
+                          </div>
+                        </Link>
+                      ) : (
+                        <Link
+                          to="/admin/analysis"
+                          className="flex items-center gap-3 px-3 py-2"
+                        >
+                          <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <BarChart3 className="w-4 h-4 text-purple-600" />
+                          </div>
+                          <div>
+                            <p className="font-medium">Admin Panel</p>
+                            <p className="text-xs text-gray-500">
+                              Analytics & Management
+                            </p>
+                          </div>
+                        </Link>
+                      )}
+                    </DropdownMenuItem>
+
+                    {role === "user" && (
+                      <DropdownMenuItem asChild className="rounded-lg mb-1">
+                        <Link
+                          to="/user/my-profile"
+                          className="flex items-center gap-3 px-3 py-2"
+                        >
+                          <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                            <User className="w-4 h-4 text-green-600" />
+                          </div>
+                          <div>
+                            <p className="font-medium">My Profile</p>
+                            <p className="text-xs text-gray-500">
+                              Update your information
+                            </p>
+                          </div>
+                        </Link>
+                      </DropdownMenuItem>
+                    )}
+
+                    <DropdownMenuItem asChild className="rounded-lg">
+                      <Link
+                        to="/settings"
+                        className="flex items-center gap-3 px-3 py-2"
+                      >
+                        <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                          <Settings className="w-4 h-4 text-gray-600" />
+                        </div>
+                        <div>
+                          <p className="font-medium">Settings</p>
+                          <p className="text-xs text-gray-500">
+                            Privacy & preferences
+                          </p>
+                        </div>
+                      </Link>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuSeparator className="my-2" />
+
+                    <DropdownMenuItem
+                      onClick={handleLogout}
+                      className="text-red-600 font-medium rounded-lg flex items-center gap-3 px-3 py-2"
+                    >
+                      <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+                        <LogOut className="w-4 h-4 text-red-600" />
+                      </div>
+                      <div>
+                        <p className="font-medium">Sign Out</p>
+                        <p className="text-xs text-red-500">
+                          Log out of your account
+                        </p>
+                      </div>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            ) : (
+              <Link to={"/login"}>
+                <Button className="bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white font-medium px-6 py-2 rounded-xl shadow-lg hover:shadow-primary/25 transition-all duration-300 hover:scale-105 cursor-pointer">
+                  <LogIn className="w-4 h-4" />
+                  Sign In
+                </Button>
+              </Link>
+            )}
+
+            {/* Mobile Menu Button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="lg:hidden text-white hover:bg-white/10 hover:text-white rounded-xl w-10 h-10"
+              onClick={(e) => {
+                e.stopPropagation();
+                setMobileMenuOpen(!mobileMenuOpen);
+              }}
+            >
+              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </Button>
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-40 lg:hidden">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+          <div
+            className="absolute top-20 left-4 right-4 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 max-h-[calc(100vh-6rem)] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-6">
+              {/* Mobile Logo */}
+              <div className="flex items-center gap-3 pb-4 border-b border-gray-200">
+                <h2 className="text-xl font-bold text-gray-900">
+                  Code Learner
+                </h2>
+              </div>
+
+              {/* Mobile Navigation Links */}
+              <div className="space-y-2 mb-6">
+                {navLinks.map((link) => {
+                  const IconComponent = link.icon;
+                  return (
+                    <Link
+                      key={link.href}
+                      to={link.href}
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 transition-colors duration-200"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                        <IconComponent className="w-4 h-4 text-primary" />
+                      </div>
+                      <span className="font-medium text-gray-900">
+                        {link.label}
+                      </span>
+                    </Link>
+                  );
+                })}
+              </div>
+
+              {/* Mobile User Section */}
+              {user && (
+                <div className="space-y-2 pt-4 border-t border-gray-200">
+                  <Link
+                    to={
+                      role === "user" ? "/user/my-courses" : "/admin/analysis"
+                    }
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 transition-colors duration-200"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                      {role === "user" ? (
+                        <Home className="w-4 h-4 text-blue-600" />
+                      ) : (
+                        <BarChart3 className="w-4 h-4 text-blue-600" />
+                      )}
+                    </div>
+                    <span className="font-medium text-gray-900">
+                      {role === "user" ? "Dashboard" : "Admin Panel"}
+                    </span>
+                  </Link>
+
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 transition-colors duration-200 text-red-600"
+                  >
+                    <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+                      <LogOut className="w-4 h-4 text-red-600" />
+                    </div>
+                    <span className="font-medium">Sign Out</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

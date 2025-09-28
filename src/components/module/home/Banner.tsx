@@ -76,13 +76,13 @@ export default function Banner() {
                 Start Learning Today
               </Button>
             </Link>
-            <Link to={"/login"}>
+            <Link to={"/register"}>
               <Button
                 size="lg"
                 variant="outline"
                 className="border-white/30 text-white hover:text-white bg-white/10 hover:bg-white/5 backdrop-blur-sm font-semibold px-8 py-3 rounded-full cursor-pointer"
               >
-                Login Now
+                Register Now
               </Button>
             </Link>
           </div>
