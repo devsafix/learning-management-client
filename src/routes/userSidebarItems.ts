@@ -1,5 +1,4 @@
 import MyCourses from "@/pages/user/MyCourses";
-import MyPayments from "@/pages/user/MyPayments";
 import MyProfile from "@/pages/user/MyProfile";
 
 import type { ISidebarItem } from "@/types";
@@ -22,11 +21,6 @@ export const userSidebarItems: ISidebarItem[] = [
         title: "My Courses",
         url: "/user/my-courses",
         component: MyCourses,
-      },
-      {
-        title: "My Payments",
-        url: "/user/my-payments",
-        component: MyPayments,
       },
     ],
   },
