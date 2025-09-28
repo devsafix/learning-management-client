@@ -6,7 +6,7 @@ export default function Marquee() {
     <section className="bg-[#0A091A] overflow-hidden pt-16">
       <div className="group relative m-auto max-w-7xl px-4">
         <div className="flex flex-col items-center md:flex-row">
-          <div className="md:max-w-44 md:border-r md:pr-6">
+          <div className="md:max-w-44 md:border-r md:pr-6 pb-5 md:pb-0">
             <p className="text-end font-semibold text-sm text-white">
               They Started Like You. Now They Work Here
             </p>
