@@ -27,6 +27,10 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useGetLessonsByCourseQuery } from "@/redux/features/lesson/lesson.api";
+import {
+  useGetMyCoursesQuery,
+  type EnrolledCourse,
+} from "@/redux/features/user/user.api";
 
 export default function CourseDetails() {
   const { slug } = useParams();
@@ -34,6 +38,14 @@ export default function CourseDetails() {
   const [enrollCourse, { isLoading: enrolling }] = useEnrollCourseMutation();
 
   const course = data?.data;
+
+  const { data: myCoursesData } = useGetMyCoursesQuery();
+
+  const enrolledCourses: EnrolledCourse[] = myCoursesData?.data || [];
+
+  const haveEnrolled = enrolledCourses?.find(
+    (ec) => ec.course._id === course?._id
+  );
 
   const handleEnroll = async () => {
     try {
@@ -50,12 +62,10 @@ export default function CourseDetails() {
   };
 
   // fetch lessons when course is available
-  const { data: lessonsData, isLoading: lessonLoading } = useGetLessonsByCourseQuery(
-    course?._id,
-    {
+  const { data: lessonsData, isLoading: lessonLoading } =
+    useGetLessonsByCourseQuery(course?._id, {
       skip: !course?._id,
-    }
-  );
+    });
 
   if (isLoading) {
     return (
@@ -211,15 +221,27 @@ export default function CourseDetails() {
               </Card>
 
               {/* CTA Button */}
-              <Button
-                size="lg"
-                disabled={enrolling}
-                onClick={handleEnroll}
-                className="w-full font-semibold py-4 text-lg cursor-pointer"
-              >
-                <CheckCircle className="w-5 h-5 mr-2" />
-                {enrolling ? "Processing..." : "Enroll Now - Start Learning"}
-              </Button>
+
+              {haveEnrolled ? (
+                <Button
+                  size="lg"
+                  disabled
+                  className="w-full font-semibold py-4 text-lg cursor-not-allowed"
+                >
+                  <CheckCircle className="w-5 h-5 mr-2" />
+                  Already Enrolled
+                </Button>
+              ) : (
+                <Button
+                  size="lg"
+                  disabled={enrolling}
+                  onClick={handleEnroll}
+                  className="w-full font-semibold py-4 text-lg cursor-pointer"
+                >
+                  <CheckCircle className="w-5 h-5 mr-2" />
+                  {enrolling ? "Processing..." : "Enroll Now - Start Learning"}
+                </Button>
+              )}
 
               <p className="text-center text-slate-400 text-sm">
                 💰 30-day money-back guarantee • 🔄 Lifetime access
