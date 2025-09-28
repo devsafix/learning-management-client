@@ -18,7 +18,7 @@ const testimonialsData: Testimonial[] = [
     name: "Jeremy McCabe",
     role: "Software Developer",
     avatarInitials: "JM",
-    text: "The focus on core concepts made everything click. After watching Adrian’s free content, I knew I had to invest in the full course.",
+    text: "The focus on core concepts made everything click. After watching Kawser’s free content, I knew I had to invest in the full course.",
     rating: 5,
   },
   {
@@ -26,7 +26,7 @@ const testimonialsData: Testimonial[] = [
     name: "Ahmed Hassan",
     role: "Software Developer",
     avatarInitials: "A",
-    text: "Adrian breaks down complex topics effortlessly. Learning about runtime environments and writing code like a senior developer was a game-changer for me.",
+    text: "Kawser breaks down complex topics effortlessly. Learning about runtime environments and writing code like a senior developer was a game-changer for me.",
     rating: 5,
   },
   {
@@ -50,7 +50,7 @@ const testimonialsData: Testimonial[] = [
     name: "Lucas Sousa",
     role: "Software Developer",
     avatarInitials: "L",
-    text: "JSM’s tutorials are clear, modern, and practical. They helped me build real projects that impressed employers. If you want to learn web dev the right way, this is it.",
+    text: "Code Learner’s tutorials are clear, modern, and practical. They helped me build real projects that impressed employers. If you want to learn web dev the right way, this is it.",
     rating: 5,
   },
   {
@@ -66,7 +66,7 @@ const testimonialsData: Testimonial[] = [
     name: "Anyars Yussif",
     role: "Software Developer",
     avatarInitials: "A",
-    text: "File-based routing, dynamic routes, API creation—Adrian made it all simple. JSM Pro has transformed how I understand web development.",
+    text: "File-based routing, dynamic routes, API creation—Kawser made it all simple. Code Learner Pro has transformed how I understand web development.",
     rating: 5,
   },
   {
@@ -74,7 +74,7 @@ const testimonialsData: Testimonial[] = [
     name: "Musawir Raji",
     role: "Software Developer",
     avatarInitials: "M",
-    text: "Adrian is the best tutor! I finally understand backend architecture, especially Next.js, which always confused me. Now, I can confidently tackle any project.",
+    text: "Kawser is the best tutor! I finally understand backend architecture, especially Next.js, which always confused me. Now, I can confidently tackle any project.",
     rating: 5,
   },
   {
@@ -82,7 +82,7 @@ const testimonialsData: Testimonial[] = [
     name: "Zahidul Islam",
     role: "Software Developer",
     avatarInitials: "Z",
-    text: "I’ve been following JSM since 2024, and no other resource compares. The content is always up to date, detailed, and incredibly well-explained.",
+    text: "I’ve been following Code Learner since 2024, and no other resource compares. The content is always up to date, detailed, and incredibly well-explained.",
     rating: 5,
   },
 ];
@@ -138,7 +138,9 @@ const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({
       </div>
 
       {/* Testimonial Text */}
-      <p className="text-white/80 text-base flex-grow mb-4">{testimonial.text}</p>
+      <p className="text-white/80 text-base flex-grow mb-4">
+        {testimonial.text}
+      </p>
 
       {/* Rating Stars */}
       <div className="flex">
