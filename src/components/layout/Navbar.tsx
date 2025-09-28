@@ -91,7 +91,7 @@ export default function Navbar() {
         className={cn(
           "fixed top-0 left-0 w-full z-50 transition-all duration-300",
           scrolled
-            ? "bg-white/5 backdrop-blur-2xl shadow-lg shadow-black/5"
+            ? "bg-black/50 backdrop-blur-3xl shadow-lg shadow-black/5"
             : "bg-transparent"
         )}
       >
@@ -111,27 +111,26 @@ export default function Navbar() {
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-8">
-            <div className="flex items-center gap-6">
-              {navLinks.map((link) => {
-                const IconComponent = link.icon;
-                return (
-                  <Link
-                    key={link.href}
-                    to={link.href}
-                    className="flex items-center gap-2 text-white/90 hover:text-white font-medium transition-all duration-300 group relative px-3 py-2 rounded-lg hover:bg-white/10"
-                  >
-                    <IconComponent className="w-4 h-4" />
-                    {link.label}
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-
           {/* Right side */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-8">
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center">
+              <div className="flex items-center gap-3">
+                {navLinks.map((link) => {
+                  const IconComponent = link.icon;
+                  return (
+                    <Link
+                      key={link.href}
+                      to={link.href}
+                      className="flex items-center gap-2 text-white/90 hover:text-white font-medium transition-all duration-300 group relative px-3 py-2 rounded-lg hover:bg-white/10"
+                    >
+                      <IconComponent className="w-4 h-4" />
+                      {link.label}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
             {user ? (
               <div className="flex items-center gap-3">
                 {/* User Welcome Text - Desktop only */}

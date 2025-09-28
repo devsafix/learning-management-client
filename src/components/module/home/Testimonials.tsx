@@ -106,13 +106,7 @@ const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({
     colorMap[testimonial.avatarInitials.charAt(0)] || colorMap.default;
 
   return (
-    <div
-      className="p-6 rounded-xl relative h-full flex flex-col"
-      style={{
-        background: "linear-gradient(135deg, #2A2A4A 0%, #1A1A3A 100%)",
-        border: "1px solid rgba(255, 255, 255, 0.08)",
-      }}
-    >
+    <div className="p-6 rounded-xl relative h-full flex flex-col bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f0f23]">
       {/* Header (Profile Info) */}
       <div className="flex items-start mb-4">
         {/* Avatar Placeholder */}
@@ -144,7 +138,7 @@ const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({
       </div>
 
       {/* Testimonial Text */}
-      <p className="text-white text-base flex-grow mb-4">{testimonial.text}</p>
+      <p className="text-white/80 text-base flex-grow mb-4">{testimonial.text}</p>
 
       {/* Rating Stars */}
       <div className="flex">
@@ -162,17 +156,18 @@ const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({
 };
 
 export default function Testimonials() {
-  const primaryColorClass = "text-[#4A90E2]";
-
   return (
     <div className="bg-[#0A091A]">
       <div className="max-w-7xl mx-auto px-4">
         {/* Title Section */}
-        <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-4xl sm:text-5xl font-extrabold text-white leading-tight">
-            What Devs Say About{" "}
-            <span className={primaryColorClass}>Code Learner</span>
+        <div className="text-center mb-16">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-tight mb-4">
+            What Devs Say About.{" "}
+            <span className="bg-gradient-to-r from-primary via-yellow-400 to-orange-500 bg-clip-text text-transparent">
+              Code Learner.
+            </span>
           </h2>
+          <div className="mt-8 w-24 h-1 bg-gradient-to-r from-primary to-yellow-400 mx-auto rounded-full"></div>
         </div>
 
         {/* Testimonial Grid */}
