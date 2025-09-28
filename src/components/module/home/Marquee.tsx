@@ -3,7 +3,7 @@ import { ProgressiveBlur } from "@/components/ui/progressive-blur";
 
 export default function Marquee() {
   return (
-    <section className="bg-[#0A091A] overflow-hidden py-16">
+    <section className="bg-[#0A091A] overflow-hidden pt-16">
       <div className="group relative m-auto max-w-7xl px-4">
         <div className="flex flex-col items-center md:flex-row">
           <div className="md:max-w-44 md:border-r md:pr-6">

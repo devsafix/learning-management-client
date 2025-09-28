@@ -165,7 +165,7 @@ export default function Testimonials() {
   const primaryColorClass = "text-[#4A90E2]";
 
   return (
-    <div className="bg-[#0A091A] py-16">
+    <div className="bg-[#0A091A]">
       <div className="max-w-7xl mx-auto px-4">
         {/* Title Section */}
         <div className="text-center mb-12 md:mb-16">
