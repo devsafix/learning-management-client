@@ -51,7 +51,9 @@ export default function Course() {
 
       {/* All courses */}
       <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-xl md:text-2xl font-semibold mb-6 text-white">All Courses</h2>
+        <h2 className="text-xl md:text-2xl font-semibold mb-6 text-white">
+          All Courses
+        </h2>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {courses.map((course: any) => (
