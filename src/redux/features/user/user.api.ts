@@ -22,6 +22,24 @@ export interface UserUpdatePayload {
   isVerified?: boolean;
 }
 
+export interface EnrolledCourse {
+  _id: string;
+  course: {
+    _id: string;
+    title: string;
+    description: string;
+    price: number;
+  };
+  student: {
+    _id: string;
+    name: string;
+    email: string;
+  };
+  status: "ENROLLED" | "PENDING" | "CANCELLED";
+  createdAt: string;
+  updatedAt: string;
+}
+
 const userApi = baseApi.injectEndpoints({
   endpoints: (build) => ({
     getAllUsers: build.query<{ data: User[] }, void>({
@@ -30,6 +48,22 @@ const userApi = baseApi.injectEndpoints({
         method: "GET",
       }),
       providesTags: ["USER"],
+    }),
+
+    getMe: build.query<{ data: User }, void>({
+      query: () => ({
+        url: "/users/me",
+        method: "GET",
+      }),
+      providesTags: ["USER"],
+    }),
+
+    getMyCourses: build.query<{ data: EnrolledCourse[] }, void>({
+      query: () => ({
+        url: "/orders/my-courses",
+        method: "GET",
+      }),
+      providesTags: ["USER", "COURSE"],
     }),
 
     getSingleUser: build.query<{ data: User }, string>({
@@ -81,6 +115,8 @@ const userApi = baseApi.injectEndpoints({
 
 export const {
   useGetAllUsersQuery,
+  useGetMeQuery,
+  useGetMyCoursesQuery,
   useGetSingleUserQuery,
   useUpdateUserMutation,
   useBlockUserMutation,

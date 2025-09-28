@@ -15,6 +15,7 @@ import { adminSidebarItems } from "./adminSidebarItems";
 import { generateRoutes } from "@/utils/generateRoutes";
 import { userSidebarItems } from "./userSidebarItems";
 import Unauthorized from "@/pages/Unauthorized";
+import MyVideos from "@/pages/user/MyVideos";
 
 export const router = createBrowserRouter([
   {
@@ -66,5 +67,9 @@ export const router = createBrowserRouter([
   {
     path: "register",
     Component: Register,
+  },
+  {
+    path: "my-videos",
+    Component: MyVideos,
   },
 ]);
