@@ -29,8 +29,6 @@ import {
   Award,
   ArrowUpIcon,
   BarChart3,
-  PieChart as PieChartIcon,
-  Activity,
   Star,
   Target,
   Zap,
@@ -138,18 +136,6 @@ export default function Analytics() {
     { month: "Jun", revenue: 35000, enrollments: 102, users: 245 },
   ];
 
-  // Courses by category
-  const coursesByCategory = categories
-    .map((category) => ({
-      name: category.name,
-      value: courses.filter(
-        (course) =>
-          typeof course.categoryId === "object" &&
-          course.categoryId._id === category._id
-      ).length,
-    }))
-    .filter((item) => item.value > 0);
-
   // Course levels distribution
   const courseLevels = [
     {
@@ -179,10 +165,6 @@ export default function Analytics() {
     level: course.level,
   }));
 
-  // Recent activity data
-  const recentUsers = users.slice(0, 5);
-  const recentCourses = courses.slice(0, 5);
-
   // Chart colors
   const COLORS = [
     "#6366f1", // indigo
@@ -199,15 +181,6 @@ export default function Analytics() {
       style: "currency",
       currency: "USD",
     }).format(amount);
-  };
-
-  // Format date
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
   };
 
   // Get growth indicator
@@ -592,55 +565,6 @@ export default function Analytics() {
               </ResponsiveContainer>
             </div>
           </div>
-
-          {/* Courses by Category */}
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden md:block hidden">
-            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-amber-100 to-amber-200 dark:from-amber-900/30 dark:to-amber-800/30 rounded-lg flex items-center justify-center">
-                  <PieChartIcon className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-slate-900 dark:text-slate-100">
-                    Course Categories
-                  </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Distribution by category
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="p-6">
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={coursesByCategory}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) =>
-                      `${name} ${((percent as number) * 100).toFixed(0)}%`
-                    }
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {coursesByCategory.map((_, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-        </div>
-
-        {/* Tables Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Top Performing Courses */}
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden md:block hidden">
             <div className="p-6 border-b border-slate-200 dark:border-slate-700">
@@ -714,109 +638,6 @@ export default function Analytics() {
                     </div>
                   </div>
                 ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Recent Activity */}
-          <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
-            <div className="p-6 border-b border-slate-200 dark:border-slate-700">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-cyan-100 to-cyan-200 dark:from-cyan-900/30 dark:to-cyan-800/30 rounded-lg flex items-center justify-center">
-                  <Activity className="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-slate-900 dark:text-slate-100">
-                    Recent Activity
-                  </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Latest users and courses
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="p-6">
-              <div className="space-y-6">
-                <div>
-                  <h4 className="font-medium text-sm mb-3 text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                    <Users className="w-4 h-4" />
-                    Recent Users
-                  </h4>
-                  <div className="space-y-3">
-                    {recentUsers.slice(0, 3).map((user) => (
-                      <div
-                        key={user._id}
-                        className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700/70 transition-colors"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-full flex items-center justify-center">
-                            <Users className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                          </div>
-                          <div>
-                            <span className="font-medium text-sm text-slate-900 dark:text-slate-100">
-                              {user.name}
-                            </span>
-                            <div className="flex items-center gap-2 mt-1">
-                              {user.role === "admin" && (
-                                <Badge
-                                  variant="outline"
-                                  className="text-xs px-1.5 py-0.5"
-                                >
-                                  Admin
-                                </Badge>
-                              )}
-                              {user.isVerified && (
-                                <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                        <span className="text-xs text-slate-500 dark:text-slate-400">
-                          {formatDate(user.createdAt)}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="font-medium text-sm mb-3 text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                    <BookOpen className="w-4 h-4" />
-                    Recent Courses
-                  </h4>
-                  <div className="space-y-3">
-                    {recentCourses.slice(0, 3).map((course) => (
-                      <div
-                        key={course._id}
-                        className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-700/50 hover:bg-slate-100 dark:hover:bg-slate-700/70 transition-colors"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900/30 dark:to-purple-800/30 rounded-full flex items-center justify-center">
-                            <BookOpen className="h-4 w-4 text-purple-600 dark:text-purple-400" />
-                          </div>
-                          <div className="min-w-0">
-                            <span className="font-medium text-sm text-slate-900 dark:text-slate-100 truncate block">
-                              {course.title}
-                            </span>
-                            <div className="flex items-center gap-2 mt-1">
-                              <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
-                                {formatCurrency(course.price)}
-                              </span>
-                              <span className="text-xs text-slate-500 dark:text-slate-400">
-                                {course.enrolledCount || 0} enrolled
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <div className="text-xs text-slate-500 dark:text-slate-400">
-                            {formatDate(course.createdAt)}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
               </div>
             </div>
           </div>
