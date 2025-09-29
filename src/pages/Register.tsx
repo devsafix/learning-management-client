@@ -89,7 +89,7 @@ export default function Register() {
     <div className="min-h-screen background-image flex items-stretch">
       <div className="max-w-7xl mx-auto flex w-full">
         {/* Right Section - Login Form */}
-        <div className="w-full flex-1 flex items-center justify-center px-6 py-12 lg:py-0">
+        <div className="w-full flex-1 flex items-center justify-center px-4 py-12 lg:py-0">
           <div className="w-full max-w-md">
             <Card className="border-none bg-transparent text-white">
               <CardHeader className="space-y-2 text-center pb-8">

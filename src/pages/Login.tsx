@@ -71,14 +71,24 @@ export default function Login() {
     }
   };
 
+  const quickLogin = (role: "admin" | "user") => {
+    if (role === "admin") {
+      form.setValue("email", "admin@elearning.com");
+      form.setValue("password", "12345678");
+    } else {
+      form.setValue("email", "devsafix@gmail.com");
+      form.setValue("password", "12345678");
+    }
+  };
+
   return (
     <div className="min-h-screen background-image flex items-stretch">
       <div className="max-w-7xl mx-auto flex w-full">
         {/* Right Section - Login Form */}
-        <div className="w-full flex-1 flex items-center justify-center px-6 py-12 lg:py-0">
+        <div className="w-full flex-1 flex items-center justify-center px-4 py-12 lg:py-0">
           <div className="w-full max-w-md">
             <Card className="border-none bg-transparent text-white">
-              <CardHeader className="space-y-2 text-center pb-8">
+              <CardHeader className="space-y-2 text-center pb-0">
                 <CardTitle className="text-3xl font-bold">
                   Log in to your account
                 </CardTitle>
@@ -88,6 +98,29 @@ export default function Login() {
               </CardHeader>
 
               <CardContent>
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-center mb-4">
+                    Quick Login
+                  </h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="border-white/30 text-white hover:text-white bg-white/10 hover:bg-white/5 backdrop-blur-sm font-semibold px-8 py-3 rounded-full cursor-pointer"
+                      onClick={() => quickLogin("admin")}
+                    >
+                      Admin (Instructor)
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="border-white/30 text-white hover:text-white bg-white/10 hover:bg-white/5 backdrop-blur-sm font-semibold px-8 py-3 rounded-full cursor-pointer"
+                      onClick={() => quickLogin("user")}
+                    >
+                      User (Student)
+                    </Button>
+                  </div>
+                </div>
                 <Form {...form}>
                   <form
                     onSubmit={form.handleSubmit(onSubmit)}
