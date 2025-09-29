@@ -217,15 +217,22 @@ export default function AllCourse() {
 
   // Handle Delete Course
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this course?")) return;
-
-    try {
-      await deleteCourse(id).unwrap();
-      toast.success("Course deleted successfully");
-    } catch (err: any) {
-      console.error("Delete course error:", err);
-      toast.error(err?.data?.message || "Failed to delete course");
-    }
+    toast("Are you sure you want to delete this course?", {
+      description: "This action cannot be undone.",
+      position: "top-center",
+      action: {
+        label: "Delete",
+        onClick: async () => {
+          try {
+            await deleteCourse(id).unwrap();
+            toast.success("Course deleted successfully");
+          } catch (err: any) {
+            console.error("Delete course error:", err);
+            toast.error(err?.data?.message || "Failed to delete course");
+          }
+        },
+      },
+    });
   };
 
   // Handle Edit Click

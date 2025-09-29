@@ -267,15 +267,22 @@ export default function AllLessons() {
 
   // Handle Delete Lesson
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this lesson?")) return;
-
-    try {
-      await deleteLesson(id).unwrap();
-      toast.success("Lesson deleted successfully");
-    } catch (err: any) {
-      console.error("Delete lesson error:", err);
-      toast.error(err?.data?.message || "Failed to delete lesson");
-    }
+    toast("Are you sure you want to delete this course?", {
+      description: "This action cannot be undone.",
+      position: "top-center",
+      action: {
+        label: "Delete",
+        onClick: async () => {
+          try {
+            await deleteLesson(id).unwrap();
+            toast.success("Lesson deleted successfully");
+          } catch (err: any) {
+            console.error("Delete lesson error:", err);
+            toast.error(err?.data?.message || "Failed to delete lesson");
+          }
+        },
+      },
+    });
   };
 
   // Handle Edit Click

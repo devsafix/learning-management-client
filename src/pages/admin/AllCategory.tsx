@@ -79,16 +79,23 @@ export default function AllCategory() {
   };
 
   // Delete category
-  const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Are you sure you want to delete "${name}" category?`)) return;
-
-    try {
-      await deleteCategory(id).unwrap();
-      toast.success("Category deleted successfully");
-    } catch (err: any) {
-      console.error("Delete category error:", err);
-      toast.error(err?.data?.message || "Failed to delete category");
-    }
+  const handleDelete = async (id: string) => {
+    toast("Are you sure you want to delete this course?", {
+      description: "This action cannot be undone.",
+      position: "top-center",
+      action: {
+        label: "Delete",
+        onClick: async () => {
+          try {
+            await deleteCategory(id).unwrap();
+            toast.success("Category deleted successfully");
+          } catch (err: any) {
+            console.error("Delete category error:", err);
+            toast.error(err?.data?.message || "Failed to delete category");
+          }
+        },
+      },
+    });
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -324,7 +331,7 @@ export default function AllCategory() {
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => handleDelete(cat._id, cat.name)}
+                            onClick={() => handleDelete(cat._id)}
                             disabled={isDeleting}
                             className="h-8 px-3 hover:bg-red-50 hover:border-red-200 dark:hover:bg-red-900/20 text-red-600 hover:text-red-700 border-red-200 dark:border-red-800"
                           >
