@@ -61,7 +61,7 @@ export default function PaymentSuccess() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Button
               className="w-full sm:w-auto font-semibold"
-              onClick={() => navigate("/user-my-courses")}
+              onClick={() => navigate("/user/my-courses")}
             >
               Go to My Courses <ArrowRight className="ml-2 w-4 h-4" />
             </Button>

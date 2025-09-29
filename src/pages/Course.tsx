@@ -51,7 +51,7 @@ export default function Course() {
       </div>
 
       {isLoading && (
-        <div className="bg-[#0A091A] py-16">
+        <div className="py-16">
           <div className="max-w-7xl mx-auto px-4 text-center text-white">
             <div className="flex items-center justify-center space-x-2">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -61,7 +61,7 @@ export default function Course() {
         </div>
       )}
       {isError && (
-        <div className="bg-[#0A091A] py-16">
+        <div className="py-16">
           <div className="max-w-7xl mx-auto px-4 text-center text-red-500">
             <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-6 inline-block">
               <span className="text-lg font-medium">
