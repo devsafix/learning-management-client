@@ -17,6 +17,7 @@ import { userSidebarItems } from "./userSidebarItems";
 import Unauthorized from "@/pages/Unauthorized";
 import MyVideos from "@/pages/user/MyVideos";
 import AccountStatus from "@/pages/AccountStatus";
+import UnderConstruction from "@/pages/UnderConstruction";
 
 export const router = createBrowserRouter([
   {
@@ -46,6 +47,10 @@ export const router = createBrowserRouter([
       {
         path: "account-status",
         Component: AccountStatus,
+      },
+      {
+        path: "*",
+        Component: UnderConstruction,
       },
     ],
   },
