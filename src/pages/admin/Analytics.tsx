@@ -74,7 +74,7 @@ export default function Analytics() {
   const { data: usersData, isLoading: usersLoading } = useGetAllUsersQuery();
   const { data: coursesData, isLoading: coursesLoading } =
     useGetAllCourseQuery(undefined);
-  const { data: categoriesData } = useGetCategoriesQuery({});
+  const { data: categoriesData } = useGetCategoriesQuery(undefined);
 
   if (earningsLoading || usersLoading || coursesLoading) {
     return (

@@ -69,7 +69,7 @@ interface NewCourse {
 
 export default function AllCourse() {
   const { data, isLoading } = useGetAllCourseQuery(undefined);
-  const { data: categoriesData } = useGetCategoriesQuery({});
+  const { data: categoriesData } = useGetCategoriesQuery(undefined);
 
   const [createCourse, { isLoading: isCreating }] = useCreateCourseMutation();
   const [updateCourse, { isLoading: isUpdating }] = useUpdateCourseMutation();

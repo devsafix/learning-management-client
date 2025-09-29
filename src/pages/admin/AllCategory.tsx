@@ -2,7 +2,9 @@
 import {
   useGetCategoriesQuery,
   useAddCategoryMutation,
+  useUpdateCategoryMutation,
   useDeleteCategoryMutation,
+  type Category,
 } from "@/redux/features/category/category.api";
 import {
   Dialog,
@@ -23,17 +25,23 @@ import {
   AlertCircle,
   CheckCircle2,
   Tag,
+  Edit,
 } from "lucide-react";
 
 export default function AllCategory() {
-  const { data, isLoading } = useGetCategoriesQuery({});
+  const { data, isLoading } = useGetCategoriesQuery();
 
   const [addCategory, { isLoading: isAdding }] = useAddCategoryMutation();
+  const [updateCategory, { isLoading: isUpdating }] =
+    useUpdateCategoryMutation();
   const [deleteCategory, { isLoading: isDeleting }] =
     useDeleteCategoryMutation();
 
   const [newName, setNewName] = useState("");
+  const [editName, setEditName] = useState("");
+  const [editId, setEditId] = useState<string | null>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   if (isLoading) {
     return (
@@ -58,14 +66,24 @@ export default function AllCategory() {
     );
   }
 
-  const categories = data?.data || [];
+  const categories: Category[] = data?.data || [];
+
+  // Validate category name
+  const validateCategoryName = (name: string) => {
+    if (!name.trim()) {
+      toast.error("Category name is required");
+      return false;
+    }
+    if (name.trim().length < 2) {
+      toast.error("Category name must be at least 2 characters");
+      return false;
+    }
+    return true;
+  };
 
   // Add new category
   const handleAdd = async () => {
-    if (!newName.trim()) {
-      toast.error("Category name is required");
-      return;
-    }
+    if (!validateCategoryName(newName)) return;
 
     try {
       await addCategory({ name: newName.trim() }).unwrap();
@@ -78,10 +96,27 @@ export default function AllCategory() {
     }
   };
 
+  // Update category
+  const handleUpdate = async () => {
+    if (!editId || !validateCategoryName(editName)) return;
+
+    try {
+      await updateCategory({ id: editId, name: editName.trim() }).unwrap();
+      toast.success("Category updated successfully");
+      setIsEditDialogOpen(false);
+      setEditId(null);
+      setEditName("");
+    } catch (err: any) {
+      console.error("Update category error:", err);
+      toast.error(err?.data?.message || "Failed to update category");
+    }
+  };
+
   // Delete category
   const handleDelete = async (id: string) => {
-    toast("Are you sure you want to delete this course?", {
-      description: "This action cannot be undone.",
+    toast("Are you sure you want to delete this category?", {
+      description:
+        "This action will also delete all courses and lessons under this category.",
       position: "top-center",
       action: {
         label: "Delete",
@@ -95,12 +130,29 @@ export default function AllCategory() {
           }
         },
       },
+      cancel: {
+        label: "Cancel",
+        onClick: () => {},
+      },
     });
+  };
+
+  // Handle edit click
+  const handleEditClick = (category: Category) => {
+    setEditId(category._id);
+    setEditName(category.name);
+    setIsEditDialogOpen(true);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       handleAdd();
+    }
+  };
+
+  const handleEditKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleUpdate();
     }
   };
 
@@ -292,7 +344,7 @@ export default function AllCategory() {
                   </tr>
                 </thead>
                 <tbody>
-                  {categories.map((cat: any, index: number) => (
+                  {categories.map((cat, index) => (
                     <tr
                       key={cat._id}
                       className={`border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors ${
@@ -327,7 +379,19 @@ export default function AllCategory() {
                         </div>
                       </td>
                       <td className="py-4 px-6">
-                        <div className="flex items-center justify-center">
+                        <div className="flex items-center justify-center gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleEditClick(cat)}
+                            disabled={isUpdating}
+                            className="h-8 px-3 hover:bg-blue-50 hover:border-blue-200 dark:hover:bg-blue-900/20 text-blue-600 hover:text-blue-700 border-blue-200 dark:border-blue-800"
+                          >
+                            <div className="flex items-center gap-1">
+                              <Edit className="w-3 h-3" />
+                              <span className="hidden sm:inline">Edit</span>
+                            </div>
+                          </Button>
                           <Button
                             size="sm"
                             variant="outline"
@@ -371,6 +435,71 @@ export default function AllCategory() {
           </div>
         )}
       </div>
+
+      {/* Edit Category Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader className="pb-4 border-b border-slate-200 dark:border-slate-700">
+            <DialogTitle className="text-xl font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+              <Edit className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              Edit Category
+            </DialogTitle>
+          </DialogHeader>
+          <div className="py-6">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                  Category Name
+                </label>
+                <Input
+                  placeholder="Enter category name..."
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  onKeyPress={handleEditKeyPress}
+                  className="h-11"
+                  disabled={isUpdating}
+                />
+                {editName && (
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    New slug: {editName.toLowerCase().replace(/\s+/g, "-")}
+                  </p>
+                )}
+              </div>
+            </div>
+            <div className="flex gap-3 pt-6 border-t border-slate-200 dark:border-slate-700 mt-6">
+              <Button
+                onClick={handleUpdate}
+                disabled={isUpdating || !editName.trim()}
+                className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white h-11"
+              >
+                {isUpdating ? (
+                  <div className="flex items-center">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    Updating...
+                  </div>
+                ) : (
+                  <div className="flex items-center">
+                    <CheckCircle2 className="w-4 h-4 mr-2" />
+                    Update Category
+                  </div>
+                )}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsEditDialogOpen(false);
+                  setEditId(null);
+                  setEditName("");
+                }}
+                className="flex-1 h-11"
+                disabled={isUpdating}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
