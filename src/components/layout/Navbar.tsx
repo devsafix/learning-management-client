@@ -11,7 +11,6 @@ import {
   Map,
   User,
   BarChart3,
-  Code,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -30,6 +29,7 @@ import {
 import { toast } from "sonner";
 import { baseApi } from "@/redux/baseApi";
 import { useDispatch } from "react-redux";
+import logo from "../../assets/images/logo.png";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -100,17 +100,7 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-5">
           {/* Logo */}
           <Link to={"/"} className="flex items-center gap-3 group">
-            <div className="relative">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-primary/25 transition-all duration-300 group-hover:scale-105">
-                <Code className="w-5 h-5 text-white" />
-              </div>
-              <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-primary/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm -z-10"></div>
-            </div>
-            <div className="hidden sm:block">
-              <h1 className="text-xl lg:text-2xl font-bold text-white transition-colors duration-300">
-                Code Learner
-              </h1>
-            </div>
+            <img src={logo} alt="logo" className="h-10 w-" />
           </Link>
 
           {/* Right side */}

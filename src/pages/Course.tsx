@@ -22,13 +22,13 @@ export default function Course() {
   return (
     <section className="background-image py-32 md:pt-36">
       {/* Header */}
-      <div className="mx-auto max-w-3xl px-4 text-center space-y-3 mb-12">
+      <div className="mx-auto max-w-3xl px-4 text-center space-y-4 mb-12">
         <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white">
           Courses That Take You From{" "}
           <span className="text-primary">Learning</span> to{" "}
           <span className="text-green-400">Doing</span>
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-white/80">
           Learn the skills. Build the portfolio. Get the job.
         </p>
         {/* Technology icons */}
