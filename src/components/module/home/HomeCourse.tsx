@@ -29,31 +29,31 @@ export default function HomeCourse() {
           <div className="mt-8 w-24 h-1 bg-gradient-to-r from-primary to-yellow-400 mx-auto rounded-full"></div>
         </div>
 
+        {isLoading && (
+          <div className="bg-[#0A091A] py-16">
+            <div className="max-w-7xl mx-auto px-4 text-center text-white">
+              <div className="flex items-center justify-center space-x-2">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                <span className="text-lg">Loading courses...</span>
+              </div>
+            </div>
+          </div>
+        )}
+        {isError && (
+          <div className="bg-[#0A091A] py-16">
+            <div className="max-w-7xl mx-auto px-4 text-center text-red-500">
+              <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-6 inline-block">
+                <span className="text-lg font-medium">
+                  Error loading courses.
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
         {/* Course Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {isLoading && (
-            <div className="bg-[#0A091A] py-16">
-              <div className="max-w-7xl mx-auto px-4 text-center text-white">
-                <div className="flex items-center justify-center space-x-2">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                  <span className="text-lg">Loading courses...</span>
-                </div>
-              </div>
-            </div>
-          )}
-          {isError && (
-            <div className="bg-[#0A091A] py-16">
-              <div className="max-w-7xl mx-auto px-4 text-center text-red-500">
-                <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-6 inline-block">
-                  <span className="text-lg font-medium">
-                    Error loading courses.
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-          {courses &&
-            courses?.map((course: any) => (
+        {courses && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {courses?.map((course: any) => (
               <div
                 key={course._id}
                 className="group relative bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f0f23] border border-gray-700/30 rounded-2xl shadow-2xl hover:shadow-primary/20 transition-all duration-300 overflow-hidden"
@@ -106,7 +106,8 @@ export default function HomeCourse() {
                 <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
             ))}
-        </div>
+          </div>
+        )}
 
         {/* View All Courses Button */}
         <div className="mt-16 text-center">
