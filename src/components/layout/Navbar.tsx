@@ -5,7 +5,6 @@ import {
   LogIn,
   ChevronDown,
   Home,
-  Settings,
   LogOut,
   X,
   BookOpen,
@@ -16,7 +15,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import {
   useGetMeQuery,
   useLogoutUserMutation,
@@ -36,6 +35,8 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dispatch = useDispatch();
+
+  const location = useLocation();
 
   const { data } = useGetMeQuery(undefined);
   const user = data?.data;
@@ -81,6 +82,7 @@ export default function Navbar() {
   }, [mobileMenuOpen]);
 
   const navLinks = [
+    { href: "/", label: "Home", icon: Home },
     { href: "/all-courses", label: "All Courses", icon: BookOpen },
     { href: "/learning-path", label: "Learning Path", icon: Map },
   ];
@@ -118,11 +120,16 @@ export default function Navbar() {
               <div className="flex items-center gap-3">
                 {navLinks.map((link) => {
                   const IconComponent = link.icon;
+                  const isActive = location.pathname === link.href;
                   return (
                     <Link
                       key={link.href}
                       to={link.href}
-                      className="flex items-center gap-2 text-white/90 hover:text-white font-medium transition-all duration-300 group relative px-3 py-2 rounded-lg hover:bg-white/10"
+                      className={`flex items-center gap-2 text-white/90 font-medium transition-all duration-300 group relative px-3 py-2 rounded-lg ${
+                        isActive
+                          ? "bg-white/10 text-white"
+                          : "hover:text-white hover:bg-white/10"
+                      }`}
                     >
                       <IconComponent className="w-4 h-4" />
                       {link.label}
@@ -229,23 +236,6 @@ export default function Navbar() {
                         </Link>
                       </DropdownMenuItem>
                     )}
-
-                    <DropdownMenuItem asChild className="rounded-lg">
-                      <Link
-                        to="/settings"
-                        className="flex items-center gap-3 px-3 py-2"
-                      >
-                        <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
-                          <Settings className="w-4 h-4 text-gray-600" />
-                        </div>
-                        <div>
-                          <p className="font-medium">Settings</p>
-                          <p className="text-xs text-gray-500">
-                            Privacy & preferences
-                          </p>
-                        </div>
-                      </Link>
-                    </DropdownMenuItem>
 
                     <DropdownMenuSeparator className="my-2" />
 

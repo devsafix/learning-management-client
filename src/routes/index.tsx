@@ -16,6 +16,7 @@ import { generateRoutes } from "@/utils/generateRoutes";
 import { userSidebarItems } from "./userSidebarItems";
 import Unauthorized from "@/pages/Unauthorized";
 import MyVideos from "@/pages/user/MyVideos";
+import AccountStatus from "@/pages/AccountStatus";
 
 export const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ export const router = createBrowserRouter([
       {
         path: "unauthorized",
         Component: Unauthorized,
+      },
+      {
+        path: "account-status",
+        Component: AccountStatus,
       },
     ],
   },

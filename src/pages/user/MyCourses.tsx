@@ -169,7 +169,7 @@ export default function MyCourses() {
               Discover new skills and advance your career.
             </p>
             <Button
-              onClick={() => navigate("/courses")}
+              onClick={() => navigate("/all-courses")}
               className="bg-primary hover:bg-primary/90"
             >
               Browse Courses
