@@ -12,31 +12,6 @@ export default function HomeCourse() {
   // Use the fetched data or the mock data for structure
   const courses = data?.data.slice(0, 6);
 
-  if (isLoading) {
-    return (
-      <div className="bg-[#0A091A] py-16">
-        <div className="max-w-7xl mx-auto px-4 text-center text-white">
-          <div className="flex items-center justify-center space-x-2">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            <span className="text-lg">Loading courses...</span>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="bg-[#0A091A] py-16">
-        <div className="max-w-7xl mx-auto px-4 text-center text-red-500">
-          <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-6 inline-block">
-            <span className="text-lg font-medium">Error loading courses.</span>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="py-16 bg-[#0A091A]">
       <div className="max-w-7xl mx-auto px-4">
@@ -56,6 +31,27 @@ export default function HomeCourse() {
 
         {/* Course Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {isLoading && (
+            <div className="bg-[#0A091A] py-16">
+              <div className="max-w-7xl mx-auto px-4 text-center text-white">
+                <div className="flex items-center justify-center space-x-2">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                  <span className="text-lg">Loading courses...</span>
+                </div>
+              </div>
+            </div>
+          )}
+          {isError && (
+            <div className="bg-[#0A091A] py-16">
+              <div className="max-w-7xl mx-auto px-4 text-center text-red-500">
+                <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-6 inline-block">
+                  <span className="text-lg font-medium">
+                    Error loading courses.
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
           {courses &&
             courses?.map((course: any) => (
               <div
