@@ -192,7 +192,7 @@ export default function Navbar() {
                         </Link>
                       ) : (
                         <Link
-                          to="/admin/analysis"
+                          to="/admin/analytics"
                           className="flex items-center gap-3 px-3 py-2"
                         >
                           <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
