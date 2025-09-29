@@ -171,35 +171,50 @@ export default function AllUsers() {
   };
 
   // Handle Block User
-  const handleBlock = async (userId: string, userName: string) => {
-    if (!confirm(`Are you sure you want to block ${userName}?`)) return;
 
-    // Prevent blocking yourself
-    if (currentUser && userId === currentUser._id) {
-      toast.error("You cannot block yourself");
-      return;
-    }
+  const handleBlock = async (userId: string) => {
+    toast("Are you sure you want to block?", {
+      description: "This action cannot be undone.",
+      position: "top-center",
+      action: {
+        label: "Block",
+        onClick: async () => {
+          // Prevent blocking yourself
+          if (currentUser && userId === currentUser._id) {
+            toast.error("You cannot block yourself");
+            return;
+          }
 
-    try {
-      await blockUser(userId).unwrap();
-      toast.success("User blocked successfully");
-    } catch (err: any) {
-      console.error("Block user error:", err);
-      toast.error(err?.data?.message || "Failed to block user");
-    }
+          try {
+            await blockUser(userId).unwrap();
+            toast.success("User blocked successfully");
+          } catch (err: any) {
+            console.error("Block user error:", err);
+            toast.error(err?.data?.message || "Failed to block user");
+          }
+        },
+      },
+    });
   };
 
   // Handle Unblock User
-  const handleUnblock = async (userId: string, userName: string) => {
-    if (!confirm(`Are you sure you want to unblock ${userName}?`)) return;
-
-    try {
-      await unblockUser(userId).unwrap();
-      toast.success("User unblocked successfully");
-    } catch (err: any) {
-      console.error("Unblock user error:", err);
-      toast.error(err?.data?.message || "Failed to unblock user");
-    }
+  const handleUnblock = async (userId: string) => {
+    toast("Are you sure you want to unblock?", {
+      description: "This action cannot be undone.",
+      position: "top-center",
+      action: {
+        label: "Unblock",
+        onClick: async () => {
+          try {
+            await unblockUser(userId).unwrap();
+            toast.success("User unblocked successfully");
+          } catch (err: any) {
+            console.error("Unblock user error:", err);
+            toast.error(err?.data?.message || "Failed to unblock user");
+          }
+        },
+      },
+    });
   };
 
   // Handle Edit Click
@@ -576,7 +591,7 @@ export default function AllUsers() {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => handleUnblock(user._id, user.name)}
+                              onClick={() => handleUnblock(user._id)}
                               disabled={isUnblocking}
                               className="h-8 w-8 p-0 hover:bg-emerald-50 hover:border-emerald-200 dark:hover:bg-emerald-900/20 text-emerald-600 hover:text-emerald-700"
                             >
@@ -586,7 +601,7 @@ export default function AllUsers() {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => handleBlock(user._id, user.name)}
+                              onClick={() => handleBlock(user._id)}
                               disabled={
                                 isBlocking ||
                                 (currentUser && user._id === currentUser._id)

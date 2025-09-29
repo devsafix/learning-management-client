@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Link, useLocation } from "react-router";
 import { useGetMeQuery } from "@/redux/features/auth/auth.api";
-import { User, ChevronRight } from "lucide-react";
+import { User, ChevronRight, MoveLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { getSidebarItems } from "@/utils/getSidebarItems";
 
@@ -33,7 +33,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       {/* Elegant Header with Logo */}
       <SidebarHeader className="border-b border-border p-6">
         <Link to="/" className="flex items-center justify-center">
-          <div className="relative p-3 rounded-2xl">Code Learner</div>
+          <div className="relative flex items-center gap-1 p-3 font-bold rounded-3xl">
+            <MoveLeft /> Back Home
+          </div>
         </Link>
       </SidebarHeader>
 

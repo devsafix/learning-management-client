@@ -142,10 +142,11 @@ export default function MyCourses() {
                   </p>
                   <p className="text-2xl font-bold text-gray-900">
                     {formatCurrency(
-                      enrolledCourses.reduce(
-                        (acc, course) => acc + (course.course.price || 0),
-                        0
-                      )
+                      enrolledCourses &&
+                        enrolledCourses?.reduce(
+                          (acc, course) => acc + (course?.course?.price || 0),
+                          0
+                        )
                     )}
                   </p>
                 </div>
@@ -176,99 +177,102 @@ export default function MyCourses() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {enrolledCourses.map((enrollment) => (
-              <div
-                key={enrollment._id}
-                className="bg-white rounded-2xl shadow-sm border hover:shadow-lg transition-all duration-300 overflow-hidden group"
-              >
-                {/* Course Header */}
-                <div className="p-6 pb-4">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
-                        <BookOpen className="h-4 w-4 text-primary" />
+            {enrolledCourses &&
+              enrolledCourses.map((enrollment) => (
+                <div
+                  key={enrollment?._id}
+                  className="bg-white rounded-2xl shadow-sm border hover:shadow-lg transition-all duration-300 overflow-hidden group"
+                >
+                  {/* Course Header */}
+                  <div className="p-6 pb-4">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                          <BookOpen className="h-4 w-4 text-primary" />
+                        </div>
+                        <Badge
+                          variant={
+                            enrollment?.status === "ENROLLED"
+                              ? "default"
+                              : "secondary"
+                          }
+                          className="text-xs"
+                        >
+                          {enrollment?.status}
+                        </Badge>
                       </div>
-                      <Badge
-                        variant={
-                          enrollment.status === "ENROLLED"
-                            ? "default"
-                            : "secondary"
-                        }
-                        className="text-xs"
-                      >
-                        {enrollment.status}
-                      </Badge>
+                      <div className="text-right">
+                        <p className="text-lg font-bold text-gray-900">
+                          {formatCurrency(enrollment?.course?.price)}
+                        </p>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <p className="text-lg font-bold text-gray-900">
-                        {formatCurrency(enrollment.course.price)}
-                      </p>
+
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                      {enrollment?.course?.title}
+                    </h3>
+
+                    <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
+                      {enrollment?.course?.description}
+                    </p>
+                  </div>
+
+                  {/* Course Details */}
+                  <div className="px-6 pb-4">
+                    <div className="flex items-center gap-4 text-xs text-muted-foreground mb-4">
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-3 w-3" />
+                        <span>
+                          Enrolled {formatDate(enrollment?.createdAt)}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 mb-4">
+                      <div className="flex items-center gap-1">
+                        <User className="h-3 w-3 text-muted-foreground" />
+                        <span className="text-xs text-muted-foreground">
+                          by Instructor
+                        </span>
+                      </div>
                     </div>
                   </div>
 
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-primary transition-colors">
-                    {enrollment.course.title}
-                  </h3>
-
-                  <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
-                    {enrollment.course.description}
-                  </p>
-                </div>
-
-                {/* Course Details */}
-                <div className="px-6 pb-4">
-                  <div className="flex items-center gap-4 text-xs text-muted-foreground mb-4">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-3 w-3" />
-                      <span>Enrolled {formatDate(enrollment.createdAt)}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="flex items-center gap-1">
-                      <User className="h-3 w-3 text-muted-foreground" />
+                  {/* Progress Bar */}
+                  <div className="px-6 pb-4">
+                    <div className="flex items-center justify-between mb-2">
                       <span className="text-xs text-muted-foreground">
-                        by Instructor
+                        Progress
+                      </span>
+                      <span className="text-xs font-medium text-gray-900">
+                        0%
                       </span>
                     </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div
+                        className="bg-gradient-to-r from-primary to-primary/80 h-2 rounded-full transition-all duration-300"
+                        style={{ width: `0%` }}
+                      ></div>
+                    </div>
                   </div>
-                </div>
 
-                {/* Progress Bar */}
-                <div className="px-6 pb-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-muted-foreground">
-                      Progress
-                    </span>
-                    <span className="text-xs font-medium text-gray-900">
-                      0%
-                    </span>
+                  {/* Action Button */}
+                  <div className="p-6 pt-0">
+                    <Button
+                      onClick={() => handleViewVideos(enrollment?.course?._id)}
+                      className="w-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer"
+                      size="lg"
+                    >
+                      <Play className="h-4 w-4 mr-2" />
+                      Continue Learning
+                      <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </Button>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-gradient-to-r from-primary to-primary/80 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `0%` }}
-                    ></div>
-                  </div>
-                </div>
 
-                {/* Action Button */}
-                <div className="p-6 pt-0">
-                  <Button
-                    onClick={() => handleViewVideos(enrollment.course._id)}
-                    className="w-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer"
-                    size="lg"
-                  >
-                    <Play className="h-4 w-4 mr-2" />
-                    Continue Learning
-                    <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </Button>
+                  {/* Hover Effect Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                 </div>
-
-                {/* Hover Effect Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-              </div>
-            ))}
+              ))}
           </div>
         )}
 

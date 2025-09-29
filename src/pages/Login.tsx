@@ -59,11 +59,7 @@ export default function Login() {
     try {
       const res = await loginUser(values).unwrap();
       toast.success(res.message || "Login successful!");
-      if (res?.data?.user?.role === "admin") {
-        navigate("/admin/analytics");
-      } else {
-        navigate("/user/my-courses");
-      }
+      navigate("/");
     } catch (error: any) {
       toast.error(
         error?.data?.message || "Login failed. Please check your credentials."
