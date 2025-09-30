@@ -73,7 +73,7 @@ export default function CourseDetails() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center space-y-4">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto"></div>
           <p className="text-slate-300 text-lg">Loading course details...</p>
@@ -84,7 +84,7 @@ export default function CourseDetails() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center space-y-4">
           <div className="text-red-400 text-6xl">⚠️</div>
           <p className="text-red-400 text-xl">Failed to load course details.</p>
@@ -95,7 +95,7 @@ export default function CourseDetails() {
 
   if (!course) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center space-y-4">
           <div className="text-slate-400 text-6xl">🔍</div>
           <p className="text-slate-300 text-xl">Course not found.</p>
@@ -283,7 +283,7 @@ export default function CourseDetails() {
           </div>
 
           {lessonLoading ? (
-            <div className="flex justify-center items-center py-20">
+            <div className="flex justify-center items-center py-20 bg-transparent">
               <div className="text-center space-y-4">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
                 <p className="text-slate-300">Loading curriculum...</p>

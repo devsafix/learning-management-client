@@ -56,24 +56,25 @@ export default function HomeCourse() {
             {courses?.map((course: any) => (
               <div
                 key={course._id}
-                className="group relative bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f0f23] border border-gray-700/30 rounded-2xl shadow-2xl hover:shadow-primary/20 transition-all duration-300 overflow-hidden"
+                className="group relative bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f0f23] border border-gray-700/30 rounded-2xl shadow-2xl hover:shadow-primary/20 transition-all duration-300 overflow-hidden flex flex-col"
               >
                 {/* Gradient overlay on hover */}
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-yellow-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
 
-                <div className="relative z-10">
-                  {/* Image container with overlay effects */}
-                  <div className="relative overflow-hidden mb-6 group">
-                    <img
-                      src={course.thumbnail}
-                      alt={course.title}
-                      className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative z-10 flex flex-col h-full">
+                  {/* Image container with fixed aspect ratio */}
+                  <div className="relative overflow-hidden">
+                    <div className="aspect-video w-full">
+                      <img
+                        src={course.thumbnail}
+                        alt={course.title}
+                        className="w-full h-full inset-0 object-cover transition-transform duration-500 group-hover:scale-110 bg-gradient-to-t from-black/60 opacity-100 via-transparent to-transparent"
+                      />
+                    </div>
                   </div>
 
                   {/* Content */}
-                  <div className="space-y-4 p-4">
+                  <div className="flex-grow space-y-4 p-6">
                     <h3 className="text-xl font-bold text-white group-hover:text-primary transition-colors duration-300 leading-tight">
                       {course.title}
                     </h3>
@@ -84,7 +85,7 @@ export default function HomeCourse() {
                   </div>
 
                   {/* CTA Button */}
-                  <div className="p-6 pt-4 border-t border-gray-700/30">
+                  <div className="p-6 pt-0 mt-auto">
                     <Link
                       to={`/course-details/${course.slug}`}
                       className="block"
@@ -101,9 +102,6 @@ export default function HomeCourse() {
                     </Link>
                   </div>
                 </div>
-
-                {/* Bottom glow effect */}
-                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
             ))}
           </div>
