@@ -73,7 +73,7 @@ export default function CourseDetails() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-transparent flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f0f23] flex items-center justify-center">
         <div className="text-center space-y-4">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto"></div>
           <p className="text-slate-300 text-lg">Loading course details...</p>
@@ -84,7 +84,7 @@ export default function CourseDetails() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-transparent  flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f0f23]  flex items-center justify-center">
         <div className="text-center space-y-4">
           <div className="text-red-400 text-6xl">⚠️</div>
           <p className="text-red-400 text-xl">Failed to load course details.</p>
@@ -95,7 +95,7 @@ export default function CourseDetails() {
 
   if (!course) {
     return (
-      <div className="min-h-screen bg-transparent  flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#1a1a2e] via-[#16213e] to-[#0f0f23]  flex items-center justify-center">
         <div className="text-center space-y-4">
           <div className="text-slate-400 text-6xl">🔍</div>
           <p className="text-slate-300 text-xl">Course not found.</p>
